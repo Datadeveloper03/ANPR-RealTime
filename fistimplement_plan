@@ -1,0 +1,115 @@
+# Implementation Plan - City-Wide ANPR Vehicle Tracking System
+
+A full-stack, city-wide ANPR Vehicle Tracking System designed for real-time license plate detection, trajectory reconstruction, traffic heatmaps, speed/route anomaly detection, and instant WebSocket alert broadcasts.
+
+## Proposed Architecture & Directory Structure
+
+```
+f:/ANPR CAM/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                # FastAPI app, CORS, lifespan, routes & WebSocket
+│   │   ├── config.py              # Environment settings (DATABASE_URL, REDIS_URL, etc.)
+│   │   ├── database.py            # Supabase Postgres / SQLAlchemy engine & session
+│   │   ├── models.py              # Camera, Sighting, Blacklist models
+│   │   ├── schemas.py             # Pydantic schemas for request/response
+│   │   ├── pubsub.py              # Redis PubSub wrapper with resilient fallback
+│   │   ├── spatial.py             # Haversine distance, speed & anomaly detection engine
+│   │   ├── seed_data.py           # Database seeder (realistic city cameras, baseline data)
+│   │   └── routes/
+│   │       ├── cameras.py         # GET /cameras, camera management
+│   │       ├── trajectory.py      # GET /trajectory/{plate} with path math & anomaly flags
+│   │       ├── heatmap.py         # GET /heatmap aggregated coordinates & weights
+│   │       ├── blacklist.py       # GET, POST, DELETE /blacklist
+│   │       ├── sightings.py       # GET /sightings/recent, POST /sightings
+│   │       └── alerts.py          # WebSocket /alerts endpoint & trigger hooks
+│   ├── requirements.txt
+│   └── .env.example
+├── pipeline/
+│   ├── detector.py                # YOLO vehicle/plate detection + RapidOCR pipeline
+│   ├── plate_validator.py         # Indian plate regex filter & normalization
+│   ├── video_processor.py         # Video clip ingestion & multi-camera simulation runner
+│   ├── sample_generator.py        # Generates realistic sample test video clips & test feeds
+│   └── requirements.txt
+└── frontend/
+    ├── package.json
+    ├── vite.config.ts
+    ├── index.html
+    ├── src/
+    │   ├── main.tsx
+    │   ├── App.tsx
+    │   ├── index.css              # Modern Cyberpunk/Ops dark theme design system
+    │   ├── components/
+    │   │   ├── Navbar.tsx         # Header with system status, quick stats, live clock
+    │   │   ├── MapView.tsx        # Leaflet map with Camera nodes, Heatmap & Trajectory
+    │   │   ├── TrajectoryPlayer.tsx # Animated vehicle path playback with speed & time controls
+    │   │   ├── AlertsPanel.tsx    # Live WebSocket alerts feed with audio-visual pulse
+    │   │   ├── PlateSearch.tsx    # Search input with quick demo plate chips & suggestions
+    │   │   ├── CameraFeedGrid.tsx # CCTV live/simulated camera views with OCR overlays
+    │   │   ├── BlacklistModal.tsx # Manage flagged plates & reasons
+    │   │   └── AnalyticsModal.tsx # Traffic density, peak hours & camera statistics
+    │   ├── services/
+    │   │   ├── api.ts             # Backend API client
+    │   │   └── websocket.ts       # Resilient WebSocket alert listener
+    │   └── types/
+    │       └── index.ts           # TypeScript interfaces
+```
+
+## Step-by-Step Implementation Plan
+
+### 1. Backend & Database Foundation
+- Configure database connectivity using SQLAlchemy supporting PostgreSQL / Supabase connection strings, with automatic table creation matching the schema:
+  - `cameras` (id, name, lat, lon)
+  - `sightings` (id, plate, camera_id, timestamp, confidence)
+  - `blacklist` (plate, reason)
+- Implement spatial algorithms (`spatial.py`) using Haversine formulas to compute distance in km, elapsed time, velocity (km/h), and route jump anomalies.
+- Build Redis PubSub layer (`pubsub.py`) with support for Redis Cloud/local Redis and an in-memory fallback for seamless local execution.
+- Implement API endpoints:
+  - `GET /cameras`, `GET /trajectory/{plate}`, `GET /heatmap`, `GET /blacklist`, `POST /blacklist`, `GET /sightings/recent`, `GET /stats`.
+  - `WS /alerts` for real-time broadcast of blacklist hits and anomaly detections.
+- Implement database seeder (`seed_data.py`) with realistic camera nodes across an Indian metro (e.g. New Delhi / Bengaluru / Mumbai coordinates) with baseline trajectories (clean, blacklist, anomalous).
+
+### 2. Detection & ANPR Pipeline
+- Implement `pipeline/detector.py`:
+  - Uses Ultralytics YOLO (`yolov8n` / `yolov8n-plate` / vehicle detector) + `rapidocr-onnxruntime` for OCR.
+  - Automatic fallback / mock detection generator if onnx/torch models are downloading or in environments without GPU, ensuring zero crashes.
+  - Regex filter: `^[A-Z]{2}[0-9]{1,2}[A-Z]{1,3}[0-9]{4}$` (with sanitization for spaces/dashes).
+  - Ingestion into PostgreSQL database + real-time alert dispatch to Redis when a blacklisted plate or speed anomaly is detected.
+- Implement `pipeline/sample_generator.py` to create sample test video clips with synthetic annotated vehicles and plates for zero-friction demo execution.
+
+### 3. High-Aesthetic Frontend Dashboard (React + Leaflet + Tailwind/CSS)
+- Initialize React + Vite + TypeScript application.
+- Build high-tech Command & Control interface:
+  - **Interactive Leaflet Map**:
+    - Custom styled dark tiles.
+    - Pulsing camera markers showing live status and detection count.
+    - Toggleable `leaflet.heat` heatmap layer based on aggregated sighting density.
+    - Dynamic Trajectory Layer: Animated vehicle marker moving along polyline path connecting sequential camera sightings, with breadcrumbs, timestamps, and velocity stats.
+  - **Quick Demo Suite**:
+    - One-click buttons to trace:
+      - 🟢 Clean Journey (`DL01AB1234`)
+      - 🔴 Blacklist Alert (`MH12DE1433`)
+      - ⚡ High-Speed Anomaly (`KA05MB4567` - 210 km/h)
+      - ⚠️ Checkpoint Skip Anomaly (`TN09BZ9999`)
+  - **Real-Time Live Alerts Panel**:
+    - WebSocket streaming with instant sound toggle, severity badges, and "Track on Map" shortcut.
+  - **CCTV Grid & Live Simulation Hub**:
+    - Multi-camera stream cards showing real-time detection boxes, OCR confidence scores, and plate crops.
+  - **Blacklist Manager**:
+    - Add, edit, remove flagged plates.
+
+## Verification Plan
+
+### Backend Verification:
+- Run backend with `uvicorn app.main:app --port 8000`.
+- Verify database table creation and seeding.
+- Test endpoints: `/cameras`, `/trajectory/DL01AB1234`, `/heatmap`, `/blacklist`, `/stats`.
+- Test WebSocket alert dispatch via Redis PubSub.
+
+### Pipeline Verification:
+- Run ANPR pipeline against test clips and verify plate detections, OCR parsing, regex validation, and database insertions.
+
+### Frontend Verification:
+- Start Vite dev server on port 5173.
+- Test map rendering, camera markers, heatmap toggle, animated trajectory replay, search bar, and live alert toasts via WebSocket.

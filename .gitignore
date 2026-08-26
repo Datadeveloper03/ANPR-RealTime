@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments & Dependencies
+.env
+.venv
+env/
+venv/
+ENV/
+node_modules/
+frontend/node_modules/
+
+# Build artifacts
+frontend/dist/
+dist/
+build/
+*.egg-info/
+
+# Local databases
+*.db
+*.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
