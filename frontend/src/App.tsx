@@ -145,16 +145,18 @@ export function App() {
   const handleTriggerSimulation = async () => {
     setIsSimulating(true);
     try {
-      // Simulate sequential sightings across camera nodes to demonstrate live alerts and trajectory
-      const testPlates = [
-        { plate: "DL01AB1234", cam: 1 },
-        { plate: "MH12DE1433", cam: 2 }, // triggers blacklist alert!
-        { plate: "KA05MB4567", cam: 5 }, // triggers speed alert!
+      // Simulate sequential sightings across camera nodes to demonstrate live multi-anomaly alerts
+      const testCases = [
+        { plate: "MH12DE1433", cam: 1, type: "SUV", col: "BLACK", make: "MAHINDRA" },     // 🔴 Blacklist Alert
+        { plate: "TN09BZ9999", cam: 2, type: "TRUCK", col: "WHITE", make: "TATA" },       // ⚠️ Appearance Mismatch
+        { plate: "KA04EK9081", cam: 4, type: "TRUCK", col: "YELLOW", make: "TATA" },      // 🚫 Geofence Breach
+        { plate: "TS07AB4040", cam: 7, type: "SUV", col: "WHITE", make: "TOYOTA" },       // 🔄 Prohibited U-Turn
+        { plate: "KA05MB4567", cam: 6, type: "SEDAN", col: "SILVER", make: "HYUNDAI" },   // ⚡ Speed Anomaly
       ];
 
-      for (const item of testPlates) {
-        await api.recordSighting(item.plate, item.cam, 0.98);
-        await new Promise((res) => setTimeout(res, 800));
+      for (const item of testCases) {
+        await api.recordSighting(item.plate, item.cam, 0.98, item.type, item.col, item.make);
+        await new Promise((res) => setTimeout(res, 900));
       }
       await loadInitialData();
     } catch (err) {

@@ -1,7 +1,9 @@
+import os
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.config import settings
 from app.database import engine, Base
 from app.pubsub import broadcaster
@@ -54,6 +56,12 @@ app.include_router(heatmap.router)
 app.include_router(blacklist.router)
 app.include_router(sightings.router)
 app.include_router(alerts.router)
+
+# Mount Demo Videos directory for CCTV streaming
+demo_videos_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "pipeline", "demo_videos"))
+if os.path.exists(demo_videos_dir):
+    app.mount("/videos", StaticFiles(directory=demo_videos_dir), name="videos")
+    logger.info(f"Mounted static demo videos from: {demo_videos_dir}")
 
 @app.get("/")
 def root():

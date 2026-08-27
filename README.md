@@ -138,9 +138,9 @@ To run the computer vision and OCR engine on CCTV video clips:
    python sample_generator.py
    ```
 
-4. Run the video ingestion and detection processor:
+4. Run the multi-camera video ingestion and detection processor:
    ```bash
-   python video_processor.py
+   python video_processor.py --simulate_all
    ```
 
 ---
@@ -149,12 +149,31 @@ To run the computer vision and OCR engine on CCTV video clips:
 
 Use the search bar on [http://localhost:5173](http://localhost:5173) or click the demo chips:
 
-| License Plate | Demo Scenario | Expected System Response |
-| :--- | :--- | :--- |
-| `DL01AB1234` | **Standard Journey** | Traces multi-checkpoint route from MG Road $\rightarrow$ Koramangala. |
-| `MH12DE1433` | **Blacklisted Vehicle** | Instant 🔴 **RED ALERT** banner, audio chime, and wanted status flag. |
-| `KA05MB4567` | **Speed Violation** | Triggers ⚡ **SPEED ANOMALY** alert ($>140\text{ km/h}$). |
-| `TN09BZ9999` | **Checkpoint Skip** | Flags ⚠️ **ROUTE SKIP** anomaly between non-adjacent cameras. |
+| License Plate | Vehicle Profile | Demo Scenario | Expected System Response |
+| :--- | :--- | :--- | :--- |
+| `DL01AB1234` | White Honda City Sedan | **Clean Multi-Hop Trajectory** | Traces journey across 4 checkpoints (MG Road $\rightarrow$ Koramangala). |
+| `MH12DE1433` | Black Mahindra Scorpio SUV | **Blacklisted Wanted Vehicle** | Instant 🔴 **RED ALERT** banner, audio chime, and wanted alert. |
+| `KA05MB4567` | Silver Hyundai Verna Sedan | **Speed Violation** | Triggers ⚡ **SPEED ANOMALY** alert ($>140\text{ km/h}$). |
+| `TN09BZ9999` | Registered Red Sedan $\rightarrow$ Truck | **Appearance / Profile Mismatch** | Triggers ⚠️ **APPEARANCE MISMATCH** (Registered Red Sedan detected as Truck). |
+| `KA04EK9081` | Yellow Tata Ace Logistics Truck | **Geofence Zone Violation** | Triggers ⛔ **GEOFENCE VIOLATION** (Unauthorized heavy truck in restricted sector). |
+| `KA01MJ1122` | Blue Tata Altroz Hatchback | **Ghost / Duplicate Plate** | Triggers 👻 **DUPLICATE PLATE** (Impossible teleportation between distant cameras in 12s). |
+| `TS07AB4040` | White Toyota Fortuner SUV | **Illegal U-Turn / Reverse Transit** | Triggers 🔄 **ILLEGAL U-TURN** (Rapid reverse transit across opposite corridors). |
+| `DL08CD5566` | Grey Skoda Slavia Sedan | **Illegal Parking / Loitering** | Triggers 🅿️ **ILLEGAL PARKING** (Stationary in No-Parking zone > 9 mins). |
+
+---
+
+## 📹 8-Camera CCTV Video Feeds
+
+| Camera ID | Place / Sector | Demo Video | Sample Vehicles in Video Stream |
+| :--- | :--- | :--- | :--- |
+| **CAM 01** | MG Road Junction | `cam_01_mg_road.mp4` | DL01AB1234 (Sedan), MH12DE1433 (Black SUV [Wanted]), KA03HA4321 (Hatchback), TS07AB4040 (SUV) |
+| **CAM 02** | Indiranagar 100ft Rd | `cam_02_indiranagar.mp4` | DL01AB1234 (Sedan), KA05MB4567 (Silver Verna), DL08CD5566 (Grey Loitering Sedan), KA02TR5544 (Sedan) |
+| **CAM 03** | Domlur Flyover | `cam_03_domlur.mp4` | DL01AB1234 (Sedan), TN09BZ9999 (Red Mismatch Sedan), HR51AK1100 (Silver SUV), KA05MB4567 (Sedan) |
+| **CAM 04** | Koramangala Sony Signal | `cam_04_koramangala.mp4` | DL01AB1234 (Sedan), KA04EK9081 (Yellow Truck [Geofence]), KA01MJ1122 (Blue Hatchback), MH02EE9876 (Sedan) |
+| **CAM 05** | Silk Board Outer Ring | `cam_05_silk_board.mp4` | MH12DE1433 (Black SUV [Alert]), KA53MN8899 (Red Hatchback), KA04EK9081 (Yellow Truck), DL01AB1234 (Sedan) |
+| **CAM 06** | Electronic City Toll Plaza | `cam_06_electronic_city.mp4` | KA05MB4567 (Speeding Sedan), KA01MJ1122 (Blue Duplicate Plate), KA01BB3344 (Grey SUV), DL04CA9090 (Black Sedan) |
+| **CAM 07** | MG Road South Corridor | `cam_07_mg_road_south.mp4` | TS07AB4040 (Fortuner SUV [U-Turn]), KA04ZZ1212 (Blue Sedan), DL01AB1234 (White Sedan), KA03HA4321 (Hatchback) |
+| **CAM 08** | Koramangala Ring Road Hub | `cam_08_koramangala_hub.mp4` | KA04EK9081 (Yellow Truck [Geofence Violation]), KA05QQ8989 (White Van), MH02EE9876 (Sedan), KA01BB3344 (SUV) |
 
 ---
 

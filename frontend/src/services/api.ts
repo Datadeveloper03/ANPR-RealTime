@@ -1,4 +1,14 @@
-import type { Camera, TrajectoryResponse, HeatmapPoint, BlacklistEntry, Sighting, SystemStats } from "../types";
+import type {
+  Camera,
+  TrajectoryResponse,
+  HeatmapPoint,
+  BlacklistEntry,
+  Sighting,
+  SystemStats,
+  PlaceInventory,
+  TimelineEvent,
+  AnomalyType,
+} from "../types";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
@@ -6,6 +16,18 @@ export const api = {
   async getCameras(): Promise<Camera[]> {
     const res = await fetch(`${API_BASE_URL}/cameras`);
     if (!res.ok) throw new Error("Failed to fetch cameras");
+    return res.json();
+  },
+
+  async getPlaceInventories(): Promise<PlaceInventory[]> {
+    const res = await fetch(`${API_BASE_URL}/cameras/places`);
+    if (!res.ok) throw new Error("Failed to fetch place inventories");
+    return res.json();
+  },
+
+  async getPlaceTimeline(placeName: string): Promise<TimelineEvent[]> {
+    const res = await fetch(`${API_BASE_URL}/sightings/timeline/${encodeURIComponent(placeName)}`);
+    if (!res.ok) throw new Error(`Failed to fetch timeline for ${placeName}`);
     return res.json();
   },
 
@@ -46,7 +68,7 @@ export const api = {
     if (!res.ok) throw new Error("Failed to remove from blacklist");
   },
 
-  async getRecentSightings(limit = 25): Promise<Sighting[]> {
+  async getRecentSightings(limit = 50): Promise<Sighting[]> {
     const res = await fetch(`${API_BASE_URL}/sightings/recent?limit=${limit}`);
     if (!res.ok) throw new Error("Failed to fetch recent sightings");
     return res.json();
@@ -59,16 +81,19 @@ export const api = {
   },
 
   async triggerTestAlert(payload: {
-    alert_type: "BLACKLIST_HIT" | "SPEED_ANOMALY" | "ROUTE_SKIP";
+    alert_type: AnomalyType;
     plate: string;
     camera_id: number;
     camera_name?: string;
+    place_name?: string;
     lat?: number;
     lon?: number;
     timestamp: string;
     reason: string;
     confidence?: number;
     speed_kmh?: number;
+    vehicle_type?: string;
+    vehicle_color?: string;
   }) {
     const res = await fetch(`${API_BASE_URL}/alerts/test`, {
       method: "POST",
@@ -79,7 +104,14 @@ export const api = {
     return res.json();
   },
 
-  async recordSighting(plate: string, camera_id: number, confidence = 0.95): Promise<Sighting> {
+  async recordSighting(
+    plate: string,
+    camera_id: number,
+    confidence = 0.95,
+    vehicle_type = "SEDAN",
+    vehicle_color = "WHITE",
+    make = "GENERIC"
+  ): Promise<Sighting> {
     const res = await fetch(`${API_BASE_URL}/sightings`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -87,10 +119,13 @@ export const api = {
         plate,
         camera_id,
         confidence,
+        vehicle_type,
+        vehicle_color,
+        make,
         timestamp: new Date().toISOString(),
       }),
     });
     if (!res.ok) throw new Error("Failed to record sighting");
     return res.json();
-  }
+  },
 };

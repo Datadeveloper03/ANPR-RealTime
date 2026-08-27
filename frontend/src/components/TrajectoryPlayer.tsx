@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Play, Pause, RotateCcw, AlertTriangle, ShieldCheck, Zap, CheckCircle2, Clock } from "lucide-react";
+import { Play, Pause, RotateCcw, AlertTriangle, ShieldCheck, Zap, CheckCircle2, Clock, Car, Navigation2 } from "lucide-react";
 import type { TrajectoryResponse } from "../types";
 
 interface TrajectoryPlayerProps {
@@ -45,28 +45,42 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
     return null;
   }
 
+  const profile = trajectory.registered_profile;
+
   return (
     <div className="glass-panel" style={{ padding: "16px", marginTop: "12px" }}>
       
       {/* Header Info */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "12px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "10px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
           <div style={{
             padding: "4px 10px", borderRadius: "6px",
             background: "rgba(56, 189, 248, 0.15)", border: "1px solid rgba(56, 189, 248, 0.3)",
-            fontFamily: "monospace", fontWeight: "700", fontSize: "1rem", color: "#38bdf8"
+            fontFamily: "monospace", fontWeight: "700", fontSize: "1.05rem", color: "#38bdf8"
           }}>
             {trajectory.plate}
           </div>
-          <div>
-            <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>
-              Total Checkpoints: <strong style={{ color: "#f8fafc" }}>{trajectory.total_sightings}</strong>
-            </span>
+
+          {profile && (
+            <div style={{
+              display: "flex", alignItems: "center", gap: "6px",
+              padding: "3px 8px", borderRadius: "6px",
+              background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.1)",
+              fontSize: "0.75rem", color: "#cbd5e1"
+            }}>
+              <Car size={13} color="#38bdf8" />
+              <span>Registered: <strong>{profile.registered_color} {profile.registered_type}</strong> ({profile.make} {profile.model || ""})</span>
+            </div>
+          )}
+
+          <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.75rem", color: "#94a3b8" }}>
+            <Navigation2 size={12} color="#34d399" />
+            <span>Checkpoints: <strong style={{ color: "#f8fafc" }}>{trajectory.total_sightings}</strong></span>
           </div>
         </div>
 
         {/* Status Badges */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
           {trajectory.is_blacklisted ? (
             <span style={{
               padding: "4px 10px", borderRadius: "6px",
@@ -75,23 +89,21 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
             }}>
               <AlertTriangle size={14} /> BLACKLISTED VEHICLE
             </span>
+          ) : trajectory.has_anomalies ? (
+            <span style={{
+              padding: "4px 10px", borderRadius: "6px",
+              background: "rgba(245, 158, 11, 0.2)", border: "1px solid rgba(245, 158, 11, 0.4)",
+              color: "#fbbf24", fontSize: "0.75rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px"
+            }}>
+              <Zap size={14} /> SECURITY ANOMALY DETECTED
+            </span>
           ) : (
             <span style={{
               padding: "4px 10px", borderRadius: "6px",
               background: "rgba(16, 185, 129, 0.2)", border: "1px solid rgba(16, 185, 129, 0.4)",
               color: "#34d399", fontSize: "0.75rem", fontWeight: "600", display: "flex", alignItems: "center", gap: "5px"
             }}>
-              <ShieldCheck size={14} /> AUTHORIZED VEHICLE
-            </span>
-          )}
-
-          {trajectory.has_anomalies && (
-            <span style={{
-              padding: "4px 10px", borderRadius: "6px",
-              background: "rgba(245, 158, 11, 0.2)", border: "1px solid rgba(245, 158, 11, 0.4)",
-              color: "#fbbf24", fontSize: "0.75rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px"
-            }}>
-              <Zap size={14} /> ANOMALY DETECTED
+              <ShieldCheck size={14} /> AUTHORIZED CLEAN ROUTE
             </span>
           )}
         </div>
@@ -116,9 +128,9 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
           color: "#fcd34d", fontSize: "0.82rem"
         }}>
           <div style={{ fontWeight: "700", marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }}>
-            <Zap size={15} color="#f59e0b" /> Route & Physical Rule Violations:
+            <Zap size={15} color="#f59e0b" /> Detected Security & Movement Violations:
           </div>
-          <ul style={{ paddingLeft: "20px", margin: 0, fontSize: "0.78rem" }}>
+          <ul style={{ paddingLeft: "20px", margin: 0, fontSize: "0.78rem", display: "flex", flexDirection: "column", gap: "2px" }}>
             {trajectory.anomalies.map((anom, idx) => (
               <li key={idx}>{anom}</li>
             ))}
@@ -205,7 +217,7 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
             <div style={{ fontWeight: "700", color: "#f8fafc", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "6px" }}>
               <CheckCircle2 size={15} color={currentPoint.is_anomaly ? "#f59e0b" : "#38bdf8"} />
-              {currentPoint.camera_name} (Cam #{currentPoint.camera_id})
+              {currentPoint.camera_name} ({currentPoint.place_name || "Bangalore"})
             </div>
             <div style={{ fontSize: "0.75rem", color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" }}>
               <Clock size={13} /> {new Date(currentPoint.timestamp).toLocaleString()}
@@ -213,6 +225,7 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
           </div>
 
           <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", fontSize: "0.78rem", color: "#94a3b8" }}>
+            <div>Classification: <strong style={{ color: "#38bdf8" }}>{currentPoint.vehicle_color} {currentPoint.vehicle_type} ({currentPoint.make})</strong></div>
             <div>Confidence: <strong style={{ color: "#34d399" }}>{(currentPoint.confidence * 100).toFixed(1)}%</strong></div>
             {currentPoint.distance_from_prev_km !== null && (
               <div>Dist from prev: <strong style={{ color: "#f8fafc" }}>{currentPoint.distance_from_prev_km} km</strong></div>

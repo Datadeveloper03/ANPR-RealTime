@@ -29,8 +29,8 @@ def run_multi_camera_simulation(target_dir: str = "pipeline/demo_videos", parall
     print("=" * 60)
 
     # 1. Ensure sample clips exist
-    if not os.path.exists(target_dir) or len(os.listdir(target_dir)) == 0:
-        print("Generating synthesized CCTV footage for 4 cameras...")
+    if not os.path.exists(target_dir) or len(os.listdir(target_dir)) < 8:
+        print("Generating synthesized CCTV footage for all 8 cameras...")
         generate_all_demo_videos(target_dir)
 
     camera_clips = [
@@ -38,13 +38,17 @@ def run_multi_camera_simulation(target_dir: str = "pipeline/demo_videos", parall
         (os.path.join(target_dir, "cam_02_indiranagar.mp4"), 2),
         (os.path.join(target_dir, "cam_03_domlur.mp4"), 3),
         (os.path.join(target_dir, "cam_04_koramangala.mp4"), 4),
+        (os.path.join(target_dir, "cam_05_silk_board.mp4"), 5),
+        (os.path.join(target_dir, "cam_06_electronic_city.mp4"), 6),
+        (os.path.join(target_dir, "cam_07_mg_road_south.mp4"), 7),
+        (os.path.join(target_dir, "cam_08_koramangala_hub.mp4"), 8),
     ]
 
     detector = ANPRDetector()
 
     if parallel:
-        print("Running cameras in parallel threads...")
-        with ThreadPoolExecutor(max_workers=4) as executor:
+        print("Running all 8 cameras in parallel threads...")
+        with ThreadPoolExecutor(max_workers=8) as executor:
             futures = [
                 executor.submit(process_single_camera, detector, v_path, c_id, 8)
                 for v_path, c_id in camera_clips
@@ -52,10 +56,10 @@ def run_multi_camera_simulation(target_dir: str = "pipeline/demo_videos", parall
             for f in futures:
                 f.result()
     else:
-        print("Running cameras sequentially...")
+        print("Running all 8 cameras sequentially...")
         for v_path, c_id in camera_clips:
             process_single_camera(detector, v_path, c_id, 8)
-            time.sleep(1.0)
+            time.sleep(0.8)
 
     print("=" * 60)
     print("SIMULATION COMPLETED - SIGHTINGS INGESTED & ALERTS BROADCASTED")
