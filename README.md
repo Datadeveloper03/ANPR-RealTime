@@ -192,7 +192,7 @@ f:/ANPR CAM/
 │   │   └── routes/                 # Endpoint handlers (cameras, trajectory, etc.)
 │   └── requirements.txt
 ├── pipeline/                       # Computer Vision, OCR & Video Ingestion
-│   ├── detector.py                 # YOLOv8 vehicle detection + RapidOCR pipeline
+│   ├── detector.py                 # YOLOv11 vehicle detection + RapidOCR pipeline
 │   ├── plate_validator.py          # Indian plate regex & OCR character correction
 │   ├── sample_generator.py         # CCTV video generator with moving cars & plates
 │   ├── video_processor.py          # Multi-camera stream ingestion runner
