@@ -3,7 +3,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-19.2+-61DAFB?logo=react&logoColor=black)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-FF5722?logo=yolo&logoColor=white)](https://docs.ultralytics.com)
+[![YOLOv11](https://img.shields.io/badge/YOLOv8-Ultralytics-FF5722?logo=yolo&logoColor=white)](https://docs.ultralytics.com)
 [![OpenCV](https://img.shields.io/badge/OpenCV-4.10+-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -22,7 +22,7 @@ flowchart TD
     end
 
     subgraph PIPELINE["🧠 2. AI Vision & OCR Pipeline"]
-        B1["OpenCV Frame Capture"] --> B2["YOLOv8 Vehicle Detection"]
+        B1["OpenCV Frame Capture"] --> B2["YOLOv11 Vehicle Detection"]
         B2 --> B3["Plate ROI Localization"]
         B3 --> B4["RapidOCR Character Extraction"]
         B4 --> B5["Indian Plate Regex & Character Normalizer"]
@@ -59,7 +59,7 @@ flowchart TD
 
 ## 📋 Key Features
 
-- **Real-Time ANPR Engine**: Powered by Ultralytics YOLOv8 and RapidOCR for high-precision vehicle detection and plate character recognition.
+- **Real-Time ANPR Engine**: Powered by Ultralytics YOLOv11 and RapidOCR for high-precision vehicle detection and plate character recognition.
 - **Indian Standard Plate Normalizer**: Robust regex validation (`^[A-Z]{2}[0-9]{1,2}[A-Z]{1,3}[0-9]{4}$`) with heuristic OCR character confusion correction ($O \leftrightarrow 0, I \leftrightarrow 1$).
 - **Spatio-Temporal Trajectory Reconstruction**: Chronological journey mapping across city camera nodes with breadcrumbs and timing metrics.
 - **Speed & Route Anomaly Detection**: Automatic speed computation between camera checkpoints using Haversine distance formulas.
