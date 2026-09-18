@@ -47,47 +47,58 @@ export const BlacklistModal: React.FC<BlacklistModalProps> = ({
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
-
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-8)" }}>
       {/* Header */}
-      <div className="glass-panel" style={{ padding: "var(--space-5)" }}>
-        <div>
-          <h2 style={{
-            fontSize: "var(--font-size-2xl)",
-            fontWeight: "var(--font-weight-semibold)",
+      <div className="surface" style={{ padding: "var(--space-6)" }}>
+        <h2
+          style={{
+            fontSize: "20px",
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            marginBottom: "var(--space-2)",
             display: "flex",
             alignItems: "center",
             gap: "var(--space-3)",
-            color: "var(--text-primary)"
-          }}>
-            <ShieldAlert size={20} color="var(--text-tertiary)" strokeWidth={2} /> Blacklist
-          </h2>
-          <p style={{
-            fontSize: "var(--font-size-sm)",
+          }}
+        >
+          <ShieldAlert size={20} strokeWidth={2} /> Blacklist
+        </h2>
+        <p
+          style={{
+            fontSize: "12px",
             color: "var(--text-tertiary)",
-            marginTop: "var(--space-1)"
-          }}>
-            Flagged vehicles trigger immediate alerts across all cameras
-          </p>
-        </div>
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Flagged vehicles trigger immediate alerts across all cameras
+        </p>
       </div>
 
-      {/* Add New Blacklist Item Form */}
-      <div className="glass-panel" style={{ padding: "var(--space-4)" }}>
-        <h3 style={{
-          fontSize: "var(--font-size-md)",
-          fontWeight: "var(--font-weight-semibold)",
-          marginBottom: "var(--space-4)",
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space-2)",
-          color: "var(--text-primary)"
-        }}>
+      {/* Add form */}
+      <div className="surface" style={{ padding: "var(--space-6)" }}>
+        <h3
+          style={{
+            fontSize: "15px",
+            fontWeight: 600,
+            marginBottom: "var(--space-5)",
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            letterSpacing: "-0.02em",
+          }}
+        >
           <Plus size={16} strokeWidth={2} /> Add vehicle
         </h3>
 
-        <form onSubmit={handleAdd} style={{ display: "grid", gridTemplateColumns: "200px 1fr auto", gap: "var(--space-3)", alignItems: "start" }}>
-          <div>
+        <form onSubmit={handleAdd}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "200px 1fr auto",
+              gap: "var(--space-3)",
+              alignItems: "start",
+            }}
+          >
             <input
               type="text"
               value={newPlate}
@@ -95,85 +106,83 @@ export const BlacklistModal: React.FC<BlacklistModalProps> = ({
               placeholder="e.g. MH12DE1433"
               required
               style={{
-                width: "100%",
-                padding: "var(--space-3) var(--space-4)",
-                background: "var(--bg-input)",
-                border: "1px solid var(--border-default)",
-                borderRadius: "var(--radius-lg)",
-                color: "var(--text-primary)",
+                padding: "12px 16px",
+                borderRadius: "var(--radius-xl)",
                 fontFamily: "monospace",
-                fontSize: "var(--font-size-base)"
+                fontSize: "14px",
+                letterSpacing: "0.02em",
+                fontWeight: 500,
               }}
             />
-          </div>
 
-          <div>
             <input
               type="text"
               value={newReason}
               onChange={(e) => setNewReason(e.target.value)}
-              placeholder="Reason (e.g. Stolen vehicle, red notice)"
+              placeholder="Reason (e.g. Stolen vehicle)"
               required
               style={{
-                width: "100%",
-                padding: "var(--space-3) var(--space-4)",
-                background: "var(--bg-input)",
-                border: "1px solid var(--border-default)",
-                borderRadius: "var(--radius-lg)",
-                color: "var(--text-primary)",
-                fontSize: "var(--font-size-base)"
+                padding: "12px 16px",
+                borderRadius: "var(--radius-xl)",
+                fontSize: "14px",
               }}
             />
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                padding: "12px 24px",
+                borderRadius: "var(--radius-full)",
+                background: "var(--danger)",
+                color: "#fff",
+                fontWeight: 500,
+                fontSize: "13px",
+                opacity: isSubmitting ? 0.5 : 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {isSubmitting ? "Adding..." : "Add"}
+            </button>
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            style={{
-              padding: "var(--space-3) var(--space-4)",
-              borderRadius: "var(--radius-lg)",
-              background: "var(--color-danger)",
-              color: "#fff",
-              fontWeight: "var(--font-weight-medium)",
-              fontSize: "var(--font-size-sm)",
-              opacity: isSubmitting ? 0.6 : 1,
-              whiteSpace: "nowrap"
-            }}
-          >
-            {isSubmitting ? "Adding..." : "Add to blacklist"}
-          </button>
+          {errorMsg && (
+            <div
+              style={{
+                color: "var(--danger)",
+                fontSize: "12px",
+                marginTop: "var(--space-3)",
+              }}
+            >
+              {errorMsg}
+            </div>
+          )}
         </form>
-
-        {errorMsg && (
-          <div style={{
-            color: "var(--color-danger)",
-            fontSize: "var(--font-size-sm)",
-            marginTop: "var(--space-3)"
-          }}>
-            {errorMsg}
-          </div>
-        )}
       </div>
 
-      {/* Active Blacklist Entries */}
-      <div className="glass-panel" style={{ padding: "var(--space-4)" }}>
-        <h3 style={{
-          fontSize: "var(--font-size-md)",
-          fontWeight: "var(--font-weight-semibold)",
-          marginBottom: "var(--space-4)",
-          color: "var(--text-primary)"
-        }}>
+      {/* List */}
+      <div className="surface" style={{ padding: "var(--space-6)" }}>
+        <h3
+          style={{
+            fontSize: "15px",
+            fontWeight: 600,
+            marginBottom: "var(--space-5)",
+            letterSpacing: "-0.02em",
+          }}
+        >
           Blacklisted vehicles ({blacklist.length})
         </h3>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-2)" }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
           {blacklist.length === 0 ? (
-            <div style={{
-              padding: "var(--space-8)",
-              textAlign: "center",
-              color: "var(--text-muted)",
-              fontSize: "var(--font-size-sm)"
-            }}>
+            <div
+              style={{
+                padding: "var(--space-16)",
+                textAlign: "center",
+                color: "var(--text-quaternary)",
+                fontSize: "12px",
+              }}
+            >
               No vehicles blacklisted
             </div>
           ) : (
@@ -184,52 +193,70 @@ export const BlacklistModal: React.FC<BlacklistModalProps> = ({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  padding: "var(--space-3) var(--space-4)",
-                  borderRadius: "var(--radius-lg)",
-                  background: "var(--color-danger-soft)",
+                  padding: "var(--space-4)",
+                  borderRadius: "var(--radius-xl)",
+                  background: "var(--danger-soft)",
                   border: "1px solid rgba(239, 68, 68, 0.2)",
-                  gap: "var(--space-3)"
+                  gap: "var(--space-4)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)", flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    fontFamily: "monospace",
-                    fontWeight: "var(--font-weight-semibold)",
-                    fontSize: "var(--font-size-base)",
-                    color: "var(--text-primary)",
-                    background: "var(--bg-primary)",
-                    padding: "var(--space-2) var(--space-3)",
-                    borderRadius: "var(--radius-md)",
-                    border: "1px solid var(--border-default)"
-                  }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--space-4)",
+                    flex: 1,
+                    minWidth: 0,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "monospace",
+                      fontWeight: 600,
+                      fontSize: "14px",
+                      letterSpacing: "0.02em",
+                      background: "var(--bg-primary)",
+                      padding: "8px 14px",
+                      borderRadius: "var(--radius-lg)",
+                      border: "1px solid var(--border)",
+                    }}
+                  >
                     {entry.plate}
                   </div>
-                  <div style={{
-                    fontSize: "var(--font-size-sm)",
-                    color: "var(--text-secondary)",
-                    minWidth: 0,
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap"
-                  }}>
+                  <div
+                    style={{
+                      fontSize: "13px",
+                      color: "var(--text-secondary)",
+                      minWidth: 0,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
                     {entry.reason}
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", flexShrink: 0 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "var(--space-2)",
+                    flexShrink: 0,
+                  }}
+                >
                   <button
                     onClick={() => onSelectPlate(entry.plate)}
                     style={{
-                      padding: "var(--space-2) var(--space-3)",
-                      borderRadius: "var(--radius-md)",
-                      border: "1px solid var(--border-default)",
-                      background: "var(--color-primary)",
-                      color: "#ffffff",
-                      fontSize: "var(--font-size-sm)",
-                      fontWeight: "var(--font-weight-medium)",
+                      padding: "8px 14px",
+                      borderRadius: "var(--radius-lg)",
+                      background: "var(--accent)",
+                      color: "#fff",
+                      fontSize: "12px",
+                      fontWeight: 500,
                       display: "flex",
                       alignItems: "center",
-                      gap: "var(--space-2)"
+                      gap: "6px",
                     }}
                   >
                     <Search size={12} strokeWidth={2} /> Trace
@@ -239,13 +266,13 @@ export const BlacklistModal: React.FC<BlacklistModalProps> = ({
                     style={{
                       width: "32px",
                       height: "32px",
-                      borderRadius: "var(--radius-md)",
-                      border: "1px solid var(--border-default)",
-                      background: "var(--bg-secondary)",
-                      color: "var(--color-danger)",
+                      borderRadius: "var(--radius-lg)",
+                      border: "1px solid var(--border)",
+                      background: "var(--bg-elevated)",
+                      color: "var(--danger)",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center"
+                      justifyContent: "center",
                     }}
                   >
                     <Trash2 size={14} strokeWidth={2} />
@@ -256,7 +283,6 @@ export const BlacklistModal: React.FC<BlacklistModalProps> = ({
           )}
         </div>
       </div>
-
     </div>
   );
 };
