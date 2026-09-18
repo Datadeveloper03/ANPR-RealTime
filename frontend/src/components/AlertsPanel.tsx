@@ -43,90 +43,85 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
       case "BLACKLIST_HIT":
         return { label: "Wanted", severity: "danger", icon: AlertTriangle };
       case "DUPLICATE_PLATE":
-        return { label: "Cloned plate", severity: "danger", icon: Copy };
+        return { label: "Cloned", severity: "danger", icon: Copy };
       case "APPEARANCE_MISMATCH":
         return { label: "Mismatch", severity: "warning", icon: Car };
       case "GEOFENCE_VIOLATION":
-        return { label: "Geofence breach", severity: "danger", icon: ShieldAlert };
+        return { label: "Geofence", severity: "danger", icon: ShieldAlert };
       case "ILLEGAL_UTURN":
         return { label: "U-turn", severity: "warning", icon: RotateCcw };
       case "ILLEGAL_PARKING":
-        return { label: "No parking", severity: "warning", icon: SquareParking };
+        return { label: "Parking", severity: "warning", icon: SquareParking };
       case "SPEED_ANOMALY":
       default:
-        return { label: "Speed anomaly", severity: "warning", icon: Zap };
+        return { label: "Speed", severity: "warning", icon: Zap };
     }
   };
 
-  return (
-    <div className="glass-panel" style={{
-      padding: "var(--space-4)",
-      height: "100%",
-      display: "flex",
-      flexDirection: "column"
-    }}>
+  const severityStyles = {
+    danger: { bg: "var(--danger-soft)", color: "var(--danger)", border: "rgba(239, 68, 68, 0.2)" },
+    warning: { bg: "var(--warning-soft)", color: "var(--warning)", border: "rgba(245, 158, 11, 0.2)" },
+  };
 
-      {/* Panel Header */}
-      <div style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: "var(--space-3)",
-        paddingBottom: "var(--space-3)",
-        borderBottom: "1px solid var(--border-subtle)"
-      }}>
+  return (
+    <div className="surface" style={{ padding: "var(--space-6)", height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Header */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "var(--space-4)",
+          paddingBottom: "var(--space-4)",
+          borderBottom: "1px solid var(--border)",
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-          <ShieldAlert size={16} color="var(--text-tertiary)" strokeWidth={2} />
-          <h3 style={{
-            fontSize: "var(--font-size-md)",
-            fontWeight: "var(--font-weight-semibold)",
-            color: "var(--text-primary)"
-          }}>
-            Alerts
-          </h3>
+          <h3 style={{ fontSize: "15px", fontWeight: 600, letterSpacing: "-0.02em" }}>Alerts</h3>
           {alerts.filter(a => a.alert_type !== "SYSTEM_CONNECTED").length > 0 && (
-            <span style={{
-              fontSize: "var(--font-size-xs)",
-              padding: "2px var(--space-2)",
-              borderRadius: "var(--radius-sm)",
-              background: "var(--color-danger-soft)",
-              color: "var(--color-danger)",
-              border: "1px solid rgba(239, 68, 68, 0.2)",
-              fontWeight: "var(--font-weight-medium)"
-            }}>
+            <div
+              style={{
+                fontSize: "10px",
+                padding: "3px 8px",
+                borderRadius: "var(--radius-full)",
+                background: "var(--danger-soft)",
+                color: "var(--danger)",
+                border: "1px solid rgba(239, 68, 68, 0.2)",
+                fontWeight: 600,
+              }}
+            >
               {alerts.filter(a => a.alert_type !== "SYSTEM_CONNECTED").length}
-            </span>
+            </div>
           )}
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
           <button
             onClick={() => setSoundEnabled(!soundEnabled)}
-            title={soundEnabled ? "Mute alert chime" : "Enable alert chime"}
             style={{
               width: "28px",
               height: "28px",
               background: "transparent",
-              border: "1px solid var(--border-default)",
+              border: "1px solid var(--border)",
               borderRadius: "var(--radius-md)",
-              color: soundEnabled ? "var(--text-secondary)" : "var(--text-muted)",
+              color: soundEnabled ? "var(--text-secondary)" : "var(--text-quaternary)",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
             }}
           >
-            {soundEnabled ? <Volume2 size={14} strokeWidth={2} /> : <VolumeX size={14} strokeWidth={2} />}
+            {soundEnabled ? <Volume2 size={13} strokeWidth={2} /> : <VolumeX size={13} strokeWidth={2} />}
           </button>
           <button
             onClick={onClearAlerts}
             style={{
-              padding: "var(--space-1) var(--space-3)",
-              fontSize: "var(--font-size-xs)",
-              borderRadius: "var(--radius-md)",
-              background: "var(--bg-secondary)",
-              border: "1px solid var(--border-default)",
+              padding: "6px 12px",
+              fontSize: "11px",
+              borderRadius: "var(--radius-lg)",
+              background: "var(--bg-elevated)",
+              border: "1px solid var(--border)",
               color: "var(--text-tertiary)",
-              fontWeight: "var(--font-weight-medium)"
+              fontWeight: 500,
             }}
           >
             Clear
@@ -134,13 +129,8 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
         </div>
       </div>
 
-      {/* Quick Filter Bar */}
-      <div style={{
-        display: "flex",
-        gap: "var(--space-1)",
-        flexWrap: "wrap",
-        marginBottom: "var(--space-4)"
-      }}>
+      {/* Filters */}
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "var(--space-4)" }}>
         {[
           { key: "ALL", label: "All" },
           { key: "DUPLICATE_PLATE", label: "Clones" },
@@ -154,14 +144,13 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
             key={f.key}
             onClick={() => setFilterType(f.key)}
             style={{
-              padding: "var(--space-1) var(--space-2)",
-              borderRadius: "var(--radius-md)",
-              border: "1px solid var(--border-default)",
-              fontSize: "var(--font-size-xs)",
-              fontWeight: "var(--font-weight-medium)",
-              background: filterType === f.key ? "var(--color-primary)" : "var(--bg-secondary)",
+              padding: "4px 10px",
+              borderRadius: "var(--radius-lg)",
+              border: "1px solid var(--border)",
+              fontSize: "11px",
+              fontWeight: 500,
+              background: filterType === f.key ? "var(--accent)" : "var(--bg-elevated)",
               color: filterType === f.key ? "#ffffff" : "var(--text-tertiary)",
-              transition: "var(--transition-base)"
             }}
           >
             {f.label}
@@ -169,39 +158,31 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
         ))}
       </div>
 
-      {/* Alerts List */}
-      <div style={{
-        flex: 1,
-        overflowY: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: "var(--space-2)"
-      }}>
+      {/* Alerts list */}
+      <div
+        style={{
+          flex: 1,
+          overflowY: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--space-3)",
+        }}
+      >
         {filteredAlerts.length === 0 ? (
-          <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "var(--space-10) var(--space-4)",
-            color: "var(--text-muted)",
-            textAlign: "center",
-            gap: "var(--space-3)"
-          }}>
-            <Radio size={28} color="var(--text-disabled)" strokeWidth={2} />
-            <div style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--text-tertiary)"
-            }}>
-              Listening for alerts...
-            </div>
-            <div style={{
-              fontSize: "var(--font-size-xs)",
-              color: "var(--text-muted)",
-              maxWidth: "240px"
-            }}>
-              Security events and blacklist hits will appear here in real time
-            </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "var(--space-16) var(--space-4)",
+              color: "var(--text-quaternary)",
+              textAlign: "center",
+              gap: "var(--space-3)",
+            }}
+          >
+            <Radio size={28} strokeWidth={1.5} />
+            <div style={{ fontSize: "12px", color: "var(--text-tertiary)" }}>Listening for alerts</div>
           </div>
         ) : (
           filteredAlerts.map((alert, idx) => {
@@ -209,96 +190,94 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
 
             if (isSys) {
               return (
-                <div key={idx} style={{
-                  padding: "var(--space-2) var(--space-3)",
-                  borderRadius: "var(--radius-md)",
-                  background: "var(--color-info-soft)",
-                  border: "1px solid rgba(99, 179, 237, 0.2)",
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--color-info)",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "var(--space-2)"
-                }}>
-                  <Radio size={12} strokeWidth={2} /> {alert.message}
+                <div
+                  key={idx}
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "var(--radius-lg)",
+                    background: "var(--accent-soft)",
+                    border: "1px solid rgba(59, 130, 246, 0.2)",
+                    fontSize: "11px",
+                    color: "var(--accent)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px",
+                  }}
+                >
+                  <Radio size={11} strokeWidth={2} /> {alert.message}
                 </div>
               );
             }
 
             const badge = getAnomalyBadge(alert.alert_type);
             const BadgeIcon = badge.icon;
-
-            const severityColors = {
-              danger: {
-                bg: "var(--color-danger-soft)",
-                border: "rgba(239, 68, 68, 0.2)",
-                color: "var(--color-danger)"
-              },
-              warning: {
-                bg: "var(--color-warning-soft)",
-                border: "rgba(245, 158, 11, 0.2)",
-                color: "var(--color-warning)"
-              }
-            };
-
-            const colors = severityColors[badge.severity as keyof typeof severityColors];
+            const styles = severityStyles[badge.severity as keyof typeof severityStyles];
 
             return (
               <div
                 key={idx}
                 style={{
-                  padding: "var(--space-3)",
-                  borderRadius: "var(--radius-lg)",
-                  background: colors.bg,
-                  border: `1px solid ${colors.border}`,
+                  padding: "var(--space-4)",
+                  borderRadius: "var(--radius-xl)",
+                  background: styles.bg,
+                  border: `1px solid ${styles.border}`,
                   display: "flex",
                   flexDirection: "column",
-                  gap: "var(--space-2)"
+                  gap: "var(--space-2)",
                 }}
               >
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "var(--space-2)"
-                }}>
-                  <div style={{
+                <div
+                  style={{
                     display: "flex",
                     alignItems: "center",
+                    justifyContent: "space-between",
                     gap: "var(--space-2)",
-                    flex: 1,
-                    minWidth: 0
-                  }}>
-                    <div style={{
-                      width: "24px",
-                      height: "24px",
-                      borderRadius: "var(--radius-md)",
-                      background: colors.bg,
-                      border: `1px solid ${colors.border}`,
+                  }}
+                >
+                  <div
+                    style={{
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      flexShrink: 0
-                    }}>
-                      <BadgeIcon size={12} color={colors.color} strokeWidth={2} />
+                      gap: "var(--space-2)",
+                      flex: 1,
+                      minWidth: 0,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        borderRadius: "var(--radius-md)",
+                        background: styles.bg,
+                        border: `1px solid ${styles.border}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                      }}
+                    >
+                      <BadgeIcon size={12} color={styles.color} strokeWidth={2} />
                     </div>
-                    <span style={{
-                      fontFamily: "monospace",
-                      fontWeight: "var(--font-weight-semibold)",
-                      fontSize: "var(--font-size-base)",
-                      color: "var(--text-primary)"
-                    }}>
+                    <span
+                      style={{
+                        fontFamily: "monospace",
+                        fontWeight: 600,
+                        fontSize: "13px",
+                      }}
+                    >
                       {alert.plate}
                     </span>
-                    <span style={{
-                      fontSize: "var(--font-size-xs)",
-                      padding: "2px var(--space-2)",
-                      borderRadius: "var(--radius-sm)",
-                      background: colors.bg,
-                      color: colors.color,
-                      border: `1px solid ${colors.border}`,
-                      fontWeight: "var(--font-weight-medium)"
-                    }}>
+                    <span
+                      style={{
+                        fontSize: "10px",
+                        padding: "2px 6px",
+                        borderRadius: "var(--radius-sm)",
+                        background: styles.bg,
+                        color: styles.color,
+                        border: `1px solid ${styles.border}`,
+                        fontWeight: 600,
+                      }}
+                    >
                       {badge.label}
                     </span>
                   </div>
@@ -307,16 +286,16 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
                     <button
                       onClick={() => onSelectPlate(alert.plate!)}
                       style={{
-                        padding: "var(--space-1) var(--space-2)",
-                        fontSize: "var(--font-size-xs)",
-                        borderRadius: "var(--radius-md)",
-                        background: "var(--color-primary)",
+                        padding: "4px 10px",
+                        fontSize: "11px",
+                        borderRadius: "var(--radius-lg)",
+                        background: "var(--accent)",
                         color: "#fff",
-                        fontWeight: "var(--font-weight-medium)",
+                        fontWeight: 500,
                         display: "flex",
                         alignItems: "center",
-                        gap: "var(--space-1)",
-                        flexShrink: 0
+                        gap: "4px",
+                        flexShrink: 0,
                       }}
                     >
                       <Navigation size={10} strokeWidth={2} /> Trace
@@ -324,31 +303,37 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
                   )}
                 </div>
 
-                <div style={{
-                  fontSize: "var(--font-size-sm)",
-                  color: "var(--text-secondary)",
-                  lineHeight: "var(--line-height-base)"
-                }}>
+                <div
+                  style={{
+                    fontSize: "12px",
+                    color: "var(--text-secondary)",
+                    lineHeight: 1.5,
+                  }}
+                >
                   {alert.reason}
                 </div>
 
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--text-tertiary)",
-                  gap: "var(--space-2)"
-                }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    fontSize: "11px",
+                    color: "var(--text-tertiary)",
+                    gap: "var(--space-2)",
+                  }}
+                >
                   <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {alert.place_name ? `${alert.place_name} • ${alert.camera_name}` : (alert.camera_name || `Camera ${alert.camera_id}`)}
                   </span>
-                  <time style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "var(--space-1)",
-                    flexShrink: 0
-                  }}>
+                  <time
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      flexShrink: 0,
+                    }}
+                  >
                     <Clock size={10} strokeWidth={2} /> {new Date(alert.timestamp).toLocaleTimeString()}
                   </time>
                 </div>
@@ -357,7 +342,6 @@ export const AlertsPanel: React.FC<AlertsPanelProps> = ({
           })
         )}
       </div>
-
     </div>
   );
 };

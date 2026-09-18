@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, AlertTriangle, ShieldCheck, Zap, Copy, Car, ShieldAlert, RotateCcw, SquareParking } from "lucide-react";
+import { Search, ShieldCheck, Car, Copy, ShieldAlert, RotateCcw, SquareParking, AlertTriangle, Zap } from "lucide-react";
 
 interface PlateSearchProps {
   onSearch: (plate: string) => void;
@@ -17,219 +17,231 @@ export const PlateSearch: React.FC<PlateSearchProps> = ({ onSearch, isLoading, a
     }
   };
 
-  const demoScenarios = [
+  const scenarios = [
     {
       plate: "DL01AB1234",
-      label: "Clean Multi-Point Road Route",
+      label: "Clean route",
       severity: "success",
-      desc: "MG Rd → Indiranagar → Domlur → Koramangala",
+      desc: "Normal trajectory across city",
       icon: ShieldCheck,
     },
     {
       plate: "TN09BZ9999",
-      label: "Vehicle Appearance Mismatch",
+      label: "Vehicle mismatch",
       severity: "warning",
-      desc: "Registered: Red Sedan • Detected: White Truck",
+      desc: "Registered sedan, detected truck",
       icon: Car,
     },
     {
       plate: "KA01MJ1122",
-      label: "Cloned / Duplicate Plate",
+      label: "Clone detected",
       severity: "danger",
-      desc: "Simultaneous sightings 10.7km apart in 12s",
+      desc: "Simultaneous sightings 10km apart",
       icon: Copy,
     },
     {
       plate: "KA04EK9081",
-      label: "Geofence Zone Violation",
+      label: "Geofence breach",
       severity: "danger",
-      desc: "Unauthorized entry into Koramangala restricted zone",
+      desc: "Unauthorized zone entry",
       icon: ShieldAlert,
     },
     {
       plate: "TS07AB4040",
-      label: "Prohibited U-Turn",
+      label: "Illegal U-turn",
       severity: "warning",
-      desc: "Corridor reversal at MG Road intersection",
+      desc: "Prohibited maneuver detected",
       icon: RotateCcw,
     },
     {
       plate: "DL08CD5566",
-      label: "Illegal Parking / Dwell",
+      label: "Parking violation",
       severity: "warning",
-      desc: "9 minute dwell in Indiranagar no-parking zone",
+      desc: "9min dwell in no-parking zone",
       icon: SquareParking,
     },
     {
       plate: "MH12DE1433",
-      label: "Blacklisted Vehicle",
+      label: "Wanted vehicle",
       severity: "danger",
-      desc: "Wanted • Stolen vehicle • Red notice #9921",
+      desc: "Stolen vehicle, red notice",
       icon: AlertTriangle,
     },
     {
       plate: "KA05MB4567",
-      label: "Extreme Speed Anomaly",
+      label: "Speed anomaly",
       severity: "warning",
-      desc: "390+ km/h computed speed (13km in 2 minutes)",
+      desc: "390+ km/h computed speed",
       icon: Zap,
     },
   ];
 
+  const severityStyles = {
+    success: { bg: "var(--success-soft)", color: "var(--success)", border: "rgba(34, 197, 94, 0.2)" },
+    warning: { bg: "var(--warning-soft)", color: "var(--warning)", border: "rgba(245, 158, 11, 0.2)" },
+    danger: { bg: "var(--danger-soft)", color: "var(--danger)", border: "rgba(239, 68, 68, 0.2)" },
+  };
+
   return (
-    <div className="glass-panel" style={{ padding: "var(--space-4)", marginBottom: "var(--space-4)" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--space-4)", flexWrap: "wrap", gap: "var(--space-2)" }}>
-        <h3 style={{
-          fontSize: "var(--font-size-md)",
-          fontWeight: "var(--font-weight-semibold)",
-          display: "flex",
-          alignItems: "center",
-          gap: "var(--space-2)",
-          color: "var(--text-primary)"
-        }}>
-          <Search size={16} color="var(--text-tertiary)" strokeWidth={2} />
-          Vehicle Search
-        </h3>
-        <span style={{
-          fontSize: "var(--font-size-xs)",
-          color: "var(--text-muted)",
-          fontFamily: "monospace"
-        }}>
-          Format: <code style={{
+    <div className="surface" style={{ padding: "var(--space-6)" }}>
+      {/* Header */}
+      <div style={{ marginBottom: "var(--space-6)" }}>
+        <h2
+          style={{
+            fontSize: "15px",
+            fontWeight: 600,
+            letterSpacing: "-0.02em",
+            marginBottom: "var(--space-2)",
+          }}
+        >
+          Vehicle search
+        </h2>
+        <p
+          style={{
+            fontSize: "12px",
             color: "var(--text-tertiary)",
-            background: "var(--bg-secondary)",
-            padding: "2px var(--space-2)",
-            borderRadius: "var(--radius-sm)",
-            border: "1px solid var(--border-subtle)"
-          }}>DL01AB1234</code>
-        </span>
+            letterSpacing: "-0.01em",
+          }}
+        >
+          Search by license plate to reconstruct road trajectory
+        </p>
       </div>
 
-      {/* Search Input Bar */}
-      <form onSubmit={handleSubmit} style={{ display: "flex", gap: "var(--space-3)", marginBottom: "var(--space-5)" }}>
-        <div style={{ position: "relative", flex: 1 }}>
+      {/* Search form */}
+      <form onSubmit={handleSubmit} style={{ marginBottom: "var(--space-8)" }}>
+        <div style={{ display: "flex", gap: "var(--space-3)" }}>
           <input
             type="text"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
-            placeholder="Enter license plate (e.g. DL01AB1234)..."
+            placeholder="Enter plate number (e.g. DL01AB1234)"
             style={{
-              width: "100%",
-              padding: "var(--space-3) var(--space-4)",
-              background: "var(--bg-input)",
-              border: "1px solid var(--border-default)",
-              borderRadius: "var(--radius-lg)",
-              color: "var(--text-primary)",
-              fontSize: "var(--font-size-base)",
+              flex: 1,
+              padding: "12px 16px",
+              borderRadius: "var(--radius-xl)",
               fontFamily: "monospace",
-              letterSpacing: "0.02em"
+              fontSize: "14px",
+              letterSpacing: "0.02em",
+              fontWeight: 500,
             }}
           />
+          <button
+            type="submit"
+            disabled={isLoading || !searchInput.trim()}
+            style={{
+              padding: "12px 24px",
+              borderRadius: "var(--radius-full)",
+              background: "var(--accent)",
+              color: "#fff",
+              fontSize: "13px",
+              fontWeight: 500,
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              opacity: (isLoading || !searchInput.trim()) ? 0.5 : 1,
+            }}
+          >
+            <Search size={14} strokeWidth={2} />
+            {isLoading ? "Tracing..." : "Search"}
+          </button>
         </div>
-        <button
-          type="submit"
-          disabled={isLoading || !searchInput.trim()}
-          style={{
-            padding: "var(--space-3) var(--space-5)",
-            background: "var(--color-primary)",
-            color: "#ffffff",
-            borderRadius: "var(--radius-lg)",
-            fontSize: "var(--font-size-sm)",
-            fontWeight: "var(--font-weight-medium)",
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-2)",
-            whiteSpace: "nowrap",
-            opacity: (isLoading || !searchInput.trim()) ? 0.6 : 1
-          }}
-        >
-          <Search size={16} strokeWidth={2} />
-          {isLoading ? "Tracing..." : "Trace vehicle"}
-        </button>
       </form>
 
-      {/* Demo Scenarios */}
+      {/* Scenarios */}
       <div>
-        <div style={{
-          fontSize: "var(--font-size-xs)",
-          color: "var(--text-muted)",
-          marginBottom: "var(--space-3)",
-          fontWeight: "var(--font-weight-medium)",
-          textTransform: "uppercase",
-          letterSpacing: "0.05em"
-        }}>
+        <div
+          style={{
+            fontSize: "11px",
+            color: "var(--text-quaternary)",
+            marginBottom: "var(--space-4)",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            fontWeight: 500,
+          }}
+        >
           Test scenarios
         </div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "var(--space-2)" }}>
-          {demoScenarios.map((demo) => {
-            const isSelected = activePlate === demo.plate;
-            const Icon = demo.icon;
-
-            const severityColors = {
-              success: { bg: "var(--color-success-soft)", border: "rgba(16, 185, 129, 0.2)", icon: "var(--color-success)" },
-              warning: { bg: "var(--color-warning-soft)", border: "rgba(245, 158, 11, 0.2)", icon: "var(--color-warning)" },
-              danger: { bg: "var(--color-danger-soft)", border: "rgba(239, 68, 68, 0.2)", icon: "var(--color-danger)" },
-            };
-
-            const colors = severityColors[demo.severity as keyof typeof severityColors];
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+            gap: "var(--space-3)",
+          }}
+        >
+          {scenarios.map((scenario) => {
+            const isActive = activePlate === scenario.plate;
+            const Icon = scenario.icon;
+            const styles = severityStyles[scenario.severity as keyof typeof severityStyles];
 
             return (
               <button
-                key={demo.plate}
+                key={scenario.plate}
                 onClick={() => {
-                  setSearchInput(demo.plate);
-                  onSearch(demo.plate);
+                  setSearchInput(scenario.plate);
+                  onSearch(scenario.plate);
                 }}
                 style={{
-                  padding: "var(--space-3)",
-                  background: isSelected ? "var(--bg-card-hover)" : "var(--bg-secondary)",
-                  border: `1px solid ${isSelected ? "var(--border-active)" : "var(--border-default)"}`,
-                  borderRadius: "var(--radius-lg)",
-                  cursor: "pointer",
+                  padding: "var(--space-4)",
+                  borderRadius: "var(--radius-xl)",
+                  background: isActive ? "var(--bg-surface)" : "var(--bg-elevated)",
+                  border: `1px solid ${isActive ? "var(--border-hover)" : "var(--border)"}`,
                   textAlign: "left",
-                  transition: "var(--transition-base)",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "var(--space-3)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-3)", marginBottom: "var(--space-2)" }}>
-                  <div style={{
-                    width: "28px",
-                    height: "28px",
-                    borderRadius: "var(--radius-md)",
-                    background: colors.bg,
-                    border: `1px solid ${colors.border}`,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexShrink: 0
-                  }}>
-                    <Icon size={14} color={colors.icon} strokeWidth={2} />
+                <div style={{ display: "flex", alignItems: "flex-start", gap: "var(--space-3)" }}>
+                  {/* Icon */}
+                  <div
+                    style={{
+                      width: "32px",
+                      height: "32px",
+                      borderRadius: "var(--radius-md)",
+                      background: styles.bg,
+                      border: `1px solid ${styles.border}`,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Icon size={16} color={styles.color} strokeWidth={2} />
                   </div>
+
+                  {/* Content */}
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{
-                      fontFamily: "monospace",
-                      fontWeight: "var(--font-weight-semibold)",
-                      color: "var(--text-primary)",
-                      fontSize: "var(--font-size-sm)",
-                      marginBottom: "2px"
-                    }}>
-                      {demo.plate}
+                    <div
+                      style={{
+                        fontFamily: "monospace",
+                        fontSize: "13px",
+                        fontWeight: 600,
+                        marginBottom: "4px",
+                        letterSpacing: "0.01em",
+                      }}
+                    >
+                      {scenario.plate}
                     </div>
-                    <div style={{
-                      fontSize: "var(--font-size-xs)",
-                      color: "var(--text-secondary)",
-                      fontWeight: "var(--font-weight-medium)",
-                      marginBottom: "var(--space-1)"
-                    }}>
-                      {demo.label}
+                    <div
+                      style={{
+                        fontSize: "12px",
+                        color: "var(--text-secondary)",
+                        fontWeight: 500,
+                        marginBottom: "2px",
+                      }}
+                    >
+                      {scenario.label}
+                    </div>
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "var(--text-tertiary)",
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      {scenario.desc}
                     </div>
                   </div>
-                </div>
-                <div style={{
-                  fontSize: "var(--font-size-xs)",
-                  color: "var(--text-tertiary)",
-                  lineHeight: "var(--line-height-base)"
-                }}>
-                  {demo.desc}
                 </div>
               </button>
             );
