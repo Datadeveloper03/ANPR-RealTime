@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Shield, Radio, Activity, Car, AlertTriangle, Eye, Video } from "lucide-react";
+import { Shield, Activity, Video, AlertTriangle, Eye, Car, Radio } from "lucide-react";
 import type { SystemStats } from "../types";
 
 interface NavbarProps {
@@ -29,200 +29,207 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   return (
-    <header className="glass-panel" style={{ margin: "var(--space-3) var(--space-4)", padding: "var(--space-3) var(--space-5)" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "var(--space-4)" }}>
-
-        {/* Left: Branding & Status */}
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
-          <div style={{
-            width: "40px", height: "40px", borderRadius: "var(--radius-lg)",
-            background: "var(--color-primary)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <Shield size={20} color="#ffffff" strokeWidth={2} />
+    <header
+      style={{
+        padding: "var(--space-6) var(--space-8)",
+        borderBottom: "1px solid var(--border)",
+        background: "var(--bg-primary)",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1800px",
+          margin: "0 auto",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: "var(--space-12)",
+        }}
+      >
+        {/* Brand */}
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)" }}>
+          <div
+            style={{
+              width: "32px",
+              height: "32px",
+              borderRadius: "var(--radius-md)",
+              background: "var(--accent)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <Shield size={18} strokeWidth={2.5} color="#fff" />
           </div>
           <div>
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-              <h1 style={{
-                fontSize: "var(--font-size-xl)",
-                fontWeight: "var(--font-weight-semibold)",
+            <h1
+              style={{
+                fontSize: "15px",
+                fontWeight: 600,
+                letterSpacing: "-0.02em",
+                lineHeight: 1,
+              }}
+            >
+              ANPR Sentinel
+            </h1>
+            <p
+              style={{
+                fontSize: "12px",
+                color: "var(--text-tertiary)",
+                marginTop: "4px",
                 letterSpacing: "-0.01em",
-                color: "var(--text-primary)"
-              }}>
-                ANPR Sentinel
-              </h1>
-              <span style={{
-                fontSize: "var(--font-size-xs)",
-                padding: "2px var(--space-2)",
-                borderRadius: "var(--radius-sm)",
-                background: "var(--color-success-soft)",
-                color: "var(--color-success)",
-                border: "1px solid rgba(16, 185, 129, 0.2)",
-                fontWeight: "var(--font-weight-medium)",
-                textTransform: "none"
-              }}>
-                ● System operational
-              </span>
-            </div>
-            <p style={{
-              fontSize: "var(--font-size-sm)",
-              color: "var(--text-tertiary)",
-              marginTop: "2px",
-              fontWeight: "var(--font-weight-normal)"
-            }}>
-              City-wide vehicle intelligence
+              }}
+            >
+              City intelligence
             </p>
           </div>
         </div>
 
-        {/* Center: Navigation Tabs */}
-        <nav style={{
-          display: "flex",
-          background: "var(--bg-secondary)",
-          padding: "var(--space-1)",
-          borderRadius: "var(--radius-lg)",
-          border: "1px solid var(--border-default)",
-          gap: "var(--space-1)"
-        }}>
+        {/* Navigation */}
+        <nav
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            background: "var(--bg-elevated)",
+            padding: "4px",
+            borderRadius: "var(--radius-xl)",
+            border: "1px solid var(--border)",
+          }}
+        >
           <button
             onClick={() => setActiveTab("map")}
             style={{
-              padding: "var(--space-2) var(--space-4)",
-              borderRadius: "var(--radius-md)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--font-weight-medium)",
+              padding: "8px 16px",
+              borderRadius: "var(--radius-lg)",
+              background: activeTab === "map" ? "var(--bg-surface)" : "transparent",
+              color: activeTab === "map" ? "var(--text-primary)" : "var(--text-tertiary)",
               display: "flex",
               alignItems: "center",
-              gap: "var(--space-2)",
-              background: activeTab === "map" ? "var(--color-primary)" : "transparent",
-              color: activeTab === "map" ? "#ffffff" : "var(--text-tertiary)",
-              transition: "var(--transition-base)"
+              gap: "8px",
+              fontSize: "13px",
+              fontWeight: 500,
             }}
           >
-            <Activity size={14} strokeWidth={2} /> Command Map
+            <Activity size={14} strokeWidth={2} />
+            Map
           </button>
           <button
             onClick={() => setActiveTab("cctv")}
             style={{
-              padding: "var(--space-2) var(--space-4)",
-              borderRadius: "var(--radius-md)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--font-weight-medium)",
+              padding: "8px 16px",
+              borderRadius: "var(--radius-lg)",
+              background: activeTab === "cctv" ? "var(--bg-surface)" : "transparent",
+              color: activeTab === "cctv" ? "var(--text-primary)" : "var(--text-tertiary)",
               display: "flex",
               alignItems: "center",
-              gap: "var(--space-2)",
-              background: activeTab === "cctv" ? "var(--color-primary)" : "transparent",
-              color: activeTab === "cctv" ? "#ffffff" : "var(--text-tertiary)",
-              transition: "var(--transition-base)"
+              gap: "8px",
+              fontSize: "13px",
+              fontWeight: 500,
             }}
           >
-            <Video size={14} strokeWidth={2} /> CCTV Network
+            <Video size={14} strokeWidth={2} />
+            Cameras
           </button>
           <button
             onClick={() => setActiveTab("blacklist")}
             style={{
-              padding: "var(--space-2) var(--space-4)",
-              borderRadius: "var(--radius-md)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--font-weight-medium)",
+              padding: "8px 16px",
+              borderRadius: "var(--radius-lg)",
+              background: activeTab === "blacklist" ? "var(--bg-surface)" : "transparent",
+              color: activeTab === "blacklist" ? "var(--text-primary)" : "var(--text-tertiary)",
               display: "flex",
               alignItems: "center",
-              gap: "var(--space-2)",
-              background: activeTab === "blacklist" ? "var(--color-primary)" : "transparent",
-              color: activeTab === "blacklist" ? "#ffffff" : "var(--text-tertiary)",
-              transition: "var(--transition-base)"
+              gap: "8px",
+              fontSize: "13px",
+              fontWeight: 500,
             }}
           >
-            <AlertTriangle size={14} strokeWidth={2} /> Blacklist
-            {(stats?.blacklisted_vehicles ?? 0) > 0 && (
-              <span style={{
-                fontSize: "var(--font-size-xs)",
-                background: "rgba(255, 255, 255, 0.2)",
-                padding: "1px var(--space-1)",
-                borderRadius: "var(--radius-sm)",
-                fontWeight: "var(--font-weight-semibold)"
-              }}>
-                {stats?.blacklisted_vehicles}
+            <AlertTriangle size={14} strokeWidth={2} />
+            Blacklist
+            {stats?.blacklisted_vehicles > 0 && (
+              <span
+                style={{
+                  padding: "2px 6px",
+                  borderRadius: "var(--radius-sm)",
+                  background: "var(--danger-soft)",
+                  color: "var(--danger)",
+                  fontSize: "10px",
+                  fontWeight: 600,
+                }}
+              >
+                {stats.blacklisted_vehicles}
               </span>
             )}
           </button>
         </nav>
 
-        {/* Right: Quick Telemetry & Simulation Trigger */}
-        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-4)" }}>
-
-          {/* Quick Stats */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-4)",
-            fontSize: "var(--font-size-sm)",
-            color: "var(--text-tertiary)"
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-              <Eye size={14} color="var(--text-tertiary)" strokeWidth={2} />
-              <span>{stats?.active_cameras || 6} cameras</span>
+        {/* Right Actions */}
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-6)" }}>
+          {/* Stats */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-6)",
+              fontSize: "12px",
+              color: "var(--text-tertiary)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <Eye size={13} strokeWidth={2} />
+              <span>{stats?.active_cameras || 6}</span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
-              <Car size={14} color="var(--text-tertiary)" strokeWidth={2} />
-              <span>{stats?.total_sightings || 0} sightings</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <Car size={13} strokeWidth={2} />
+              <span>{stats?.total_sightings || 0}</span>
             </div>
           </div>
 
-          {/* WebSocket Status Indicator */}
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "var(--space-2)",
-            padding: "var(--space-1) var(--space-3)",
-            borderRadius: "var(--radius-md)",
-            background: wsConnected ? "var(--color-success-soft)" : "var(--color-danger-soft)",
-            border: `1px solid ${wsConnected ? "rgba(16, 185, 129, 0.2)" : "rgba(239, 68, 68, 0.2)"}`,
-            fontSize: "var(--font-size-xs)",
-            fontWeight: "var(--font-weight-medium)",
-            color: wsConnected ? "var(--color-success)" : "var(--color-danger)"
-          }}>
-            <Radio size={10} className={wsConnected ? "radar-pulse" : ""} strokeWidth={2} />
+          {/* Status */}
+          <div
+            className={wsConnected ? "badge-success" : "badge-danger"}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <Radio size={10} strokeWidth={2.5} className={wsConnected ? "pulse" : ""} />
             <span>{wsConnected ? "Live" : "Connecting"}</span>
           </div>
 
-          {/* Simulation Trigger Button */}
+          {/* Actions */}
           <button
             onClick={onTriggerSimulation}
             disabled={isSimulating}
             style={{
-              padding: "var(--space-2) var(--space-4)",
-              borderRadius: "var(--radius-md)",
-              fontSize: "var(--font-size-sm)",
-              fontWeight: "var(--font-weight-medium)",
-              background: isSimulating ? "var(--bg-tertiary)" : "var(--color-primary)",
-              color: "#ffffff",
-              display: "flex",
-              alignItems: "center",
-              gap: "var(--space-2)",
-              opacity: isSimulating ? 0.6 : 1
+              padding: "8px 16px",
+              borderRadius: "var(--radius-full)",
+              background: "var(--accent)",
+              color: "#fff",
+              fontSize: "13px",
+              fontWeight: 500,
+              opacity: isSimulating ? 0.6 : 1,
             }}
           >
-            <Activity size={14} strokeWidth={2} />
             {isSimulating ? "Simulating..." : "Test feed"}
           </button>
 
-          {/* Live Clock */}
-          <time style={{
-            fontFamily: "monospace",
-            fontSize: "var(--font-size-sm)",
-            color: "var(--text-secondary)",
-            padding: "var(--space-1) var(--space-3)",
-            background: "var(--bg-secondary)",
-            borderRadius: "var(--radius-md)",
-            border: "1px solid var(--border-default)",
-            fontWeight: "var(--font-weight-medium)"
-          }}>
+          {/* Time */}
+          <time
+            style={{
+              fontFamily: "monospace",
+              fontSize: "12px",
+              color: "var(--text-quaternary)",
+              fontWeight: 500,
+              letterSpacing: "-0.02em",
+            }}
+          >
             {time}
           </time>
-
         </div>
-
       </div>
     </header>
   );

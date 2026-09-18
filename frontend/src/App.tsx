@@ -168,8 +168,7 @@ export function App() {
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      
-      {/* Top Telemetry Navbar */}
+
       <Navbar
         stats={stats}
         wsConnected={wsConnected}
@@ -179,13 +178,25 @@ export function App() {
         isSimulating={isSimulating}
       />
 
-      {/* Main Content Area */}
-      <main style={{ flex: 1, padding: "0 16px 16px 16px" }}>
+      {/* Main Content */}
+      <main
+        style={{
+          flex: 1,
+          maxWidth: "1800px",
+          width: "100%",
+          margin: "0 auto",
+          padding: "var(--space-8)",
+        }}
+      >
         {activeTab === "map" && (
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "16px" }}>
-            
-            {/* Left Column: Search Bar + Map + Trajectory Player */}
-            <div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 380px",
+              gap: "var(--space-8)",
+            }}
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-6)" }}>
               <PlateSearch
                 onSearch={handleSearchTrajectory}
                 isLoading={isLoadingTrajectory}
@@ -213,7 +224,6 @@ export function App() {
               />
             </div>
 
-            {/* Right Column: Live Intercept Alerts Stream */}
             <div>
               <AlertsPanel
                 alerts={alerts}
@@ -223,7 +233,6 @@ export function App() {
                 setSoundEnabled={setSoundEnabled}
               />
             </div>
-
           </div>
         )}
 
