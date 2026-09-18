@@ -48,89 +48,127 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
   const profile = trajectory.registered_profile;
 
   return (
-    <div className="glass-panel" style={{ padding: "16px", marginTop: "12px" }}>
-      
+    <div className="glass-panel" style={{ padding: "var(--space-4)", marginTop: "var(--space-3)" }}>
+
       {/* Header Info */}
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "10px", marginBottom: "10px" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "var(--space-3)",
+        marginBottom: "var(--space-4)",
+        paddingBottom: "var(--space-3)",
+        borderBottom: "1px solid var(--border-subtle)"
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)", flexWrap: "wrap" }}>
           <div style={{
-            padding: "4px 10px", borderRadius: "6px",
-            background: "rgba(56, 189, 248, 0.15)", border: "1px solid rgba(56, 189, 248, 0.3)",
-            fontFamily: "monospace", fontWeight: "700", fontSize: "1.05rem", color: "#38bdf8"
+            padding: "var(--space-2) var(--space-3)",
+            borderRadius: "var(--radius-md)",
+            background: "var(--bg-secondary)",
+            border: "1px solid var(--border-default)",
+            fontFamily: "monospace",
+            fontWeight: "var(--font-weight-semibold)",
+            fontSize: "var(--font-size-lg)",
+            color: "var(--text-primary)"
           }}>
             {trajectory.plate}
           </div>
 
           {profile && (
             <div style={{
-              display: "flex", alignItems: "center", gap: "6px",
-              padding: "3px 8px", borderRadius: "6px",
-              background: "rgba(255, 255, 255, 0.05)", border: "1px solid rgba(255, 255, 255, 0.1)",
-              fontSize: "0.75rem", color: "#cbd5e1"
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-2)",
+              padding: "var(--space-1) var(--space-3)",
+              borderRadius: "var(--radius-md)",
+              background: "var(--bg-secondary)",
+              border: "1px solid var(--border-subtle)",
+              fontSize: "var(--font-size-sm)",
+              color: "var(--text-secondary)"
             }}>
-              <Car size={13} color="#38bdf8" />
-              <span>Registered: <strong>{profile.registered_color} {profile.registered_type}</strong> ({profile.make} {profile.model || ""})</span>
+              <Car size={13} color="var(--text-tertiary)" strokeWidth={2} />
+              <span>{profile.registered_color} {profile.registered_type} • {profile.make}</span>
             </div>
           )}
 
-          <div style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "0.75rem", color: "#94a3b8" }}>
-            <Navigation2 size={12} color="#34d399" />
-            <span>Checkpoints: <strong style={{ color: "#f8fafc" }}>{trajectory.total_sightings}</strong></span>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            fontSize: "var(--font-size-sm)",
+            color: "var(--text-tertiary)"
+          }}>
+            <Navigation2 size={12} strokeWidth={2} />
+            <span>{trajectory.total_sightings} checkpoints</span>
           </div>
         </div>
 
-        {/* Status Badges */}
-        <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+        {/* Status Badge */}
+        <div>
           {trajectory.is_blacklisted ? (
-            <span style={{
-              padding: "4px 10px", borderRadius: "6px",
-              background: "rgba(239, 68, 68, 0.2)", border: "1px solid rgba(239, 68, 68, 0.4)",
-              color: "#f87171", fontSize: "0.75rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px"
-            }}>
-              <AlertTriangle size={14} /> BLACKLISTED VEHICLE
+            <span className="badge-danger" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <AlertTriangle size={12} strokeWidth={2} /> Blacklisted
             </span>
           ) : trajectory.has_anomalies ? (
-            <span style={{
-              padding: "4px 10px", borderRadius: "6px",
-              background: "rgba(245, 158, 11, 0.2)", border: "1px solid rgba(245, 158, 11, 0.4)",
-              color: "#fbbf24", fontSize: "0.75rem", fontWeight: "700", display: "flex", alignItems: "center", gap: "5px"
-            }}>
-              <Zap size={14} /> SECURITY ANOMALY DETECTED
+            <span className="badge-warning" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <Zap size={12} strokeWidth={2} /> Anomaly detected
             </span>
           ) : (
-            <span style={{
-              padding: "4px 10px", borderRadius: "6px",
-              background: "rgba(16, 185, 129, 0.2)", border: "1px solid rgba(16, 185, 129, 0.4)",
-              color: "#34d399", fontSize: "0.75rem", fontWeight: "600", display: "flex", alignItems: "center", gap: "5px"
-            }}>
-              <ShieldCheck size={14} /> AUTHORIZED CLEAN ROUTE
+            <span className="badge-success" style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+              <ShieldCheck size={12} strokeWidth={2} /> Clean route
             </span>
           )}
         </div>
       </div>
 
-      {/* Blacklist / Anomaly Alert Banner if present */}
+      {/* Blacklist / Anomaly Alert Banner */}
       {trajectory.is_blacklisted && trajectory.blacklist_reason && (
         <div style={{
-          padding: "10px 14px", borderRadius: "8px", marginBottom: "12px",
-          background: "rgba(239, 68, 68, 0.12)", border: "1px solid rgba(239, 68, 68, 0.3)",
-          color: "#fca5a5", fontSize: "0.82rem", display: "flex", alignItems: "center", gap: "8px"
+          padding: "var(--space-3) var(--space-4)",
+          borderRadius: "var(--radius-lg)",
+          marginBottom: "var(--space-4)",
+          background: "var(--color-danger-soft)",
+          border: "1px solid rgba(239, 68, 68, 0.2)",
+          color: "var(--color-danger)",
+          fontSize: "var(--font-size-sm)",
+          display: "flex",
+          alignItems: "center",
+          gap: "var(--space-3)"
         }}>
-          <AlertTriangle size={16} color="#ef4444" />
-          <span><strong>Blacklist Notice:</strong> {trajectory.blacklist_reason}</span>
+          <AlertTriangle size={16} strokeWidth={2} />
+          <span><strong>Blacklist notice:</strong> {trajectory.blacklist_reason}</span>
         </div>
       )}
 
       {trajectory.has_anomalies && (
         <div style={{
-          padding: "10px 14px", borderRadius: "8px", marginBottom: "12px",
-          background: "rgba(245, 158, 11, 0.12)", border: "1px solid rgba(245, 158, 11, 0.3)",
-          color: "#fcd34d", fontSize: "0.82rem"
+          padding: "var(--space-3) var(--space-4)",
+          borderRadius: "var(--radius-lg)",
+          marginBottom: "var(--space-4)",
+          background: "var(--color-warning-soft)",
+          border: "1px solid rgba(245, 158, 11, 0.2)",
+          fontSize: "var(--font-size-sm)"
         }}>
-          <div style={{ fontWeight: "700", marginBottom: "4px", display: "flex", alignItems: "center", gap: "6px" }}>
-            <Zap size={15} color="#f59e0b" /> Detected Security & Movement Violations:
+          <div style={{
+            fontWeight: "var(--font-weight-semibold)",
+            marginBottom: "var(--space-2)",
+            display: "flex",
+            alignItems: "center",
+            gap: "var(--space-2)",
+            color: "var(--color-warning)"
+          }}>
+            <Zap size={14} strokeWidth={2} /> Detected violations
           </div>
-          <ul style={{ paddingLeft: "20px", margin: 0, fontSize: "0.78rem", display: "flex", flexDirection: "column", gap: "2px" }}>
+          <ul style={{
+            paddingLeft: "var(--space-5)",
+            margin: 0,
+            fontSize: "var(--font-size-sm)",
+            color: "var(--text-secondary)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "var(--space-1)"
+          }}>
             {trajectory.anomalies.map((anom, idx) => (
               <li key={idx}>{anom}</li>
             ))}
@@ -140,12 +178,19 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
 
       {/* Playback Controls & Progress Bar */}
       <div style={{
-        background: "rgba(10, 13, 20, 0.7)", padding: "12px",
-        borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.06)",
-        marginBottom: "12px"
+        background: "var(--bg-secondary)",
+        padding: "var(--space-4)",
+        borderRadius: "var(--radius-lg)",
+        border: "1px solid var(--border-default)",
+        marginBottom: "var(--space-4)"
       }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "var(--space-3)"
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
             <button
               onClick={() => {
                 if (activePointIndex >= sightings.length - 1) {
@@ -154,12 +199,17 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
                 setIsPlaying(!isPlaying);
               }}
               style={{
-                width: "36px", height: "36px", borderRadius: "8px", border: "none",
-                background: "#0284c7", color: "#fff", cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
+                width: "36px",
+                height: "36px",
+                borderRadius: "var(--radius-lg)",
+                background: "var(--color-primary)",
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+              {isPlaying ? <Pause size={16} strokeWidth={2} /> : <Play size={16} strokeWidth={2} />}
             </button>
             <button
               onClick={() => {
@@ -167,29 +217,42 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
                 setActivePointIndex(0);
               }}
               style={{
-                width: "36px", height: "36px", borderRadius: "8px",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                background: "rgba(255, 255, 255, 0.05)", color: "#94a3b8", cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center"
+                width: "36px",
+                height: "36px",
+                borderRadius: "var(--radius-lg)",
+                border: "1px solid var(--border-default)",
+                background: "var(--bg-tertiary)",
+                color: "var(--text-tertiary)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <RotateCcw size={16} />
+              <RotateCcw size={14} strokeWidth={2} />
             </button>
             <button
               onClick={() => setPlaybackSpeed((s) => (s === 1 ? 2 : s === 2 ? 4 : 1))}
               style={{
-                padding: "6px 10px", borderRadius: "6px",
-                border: "1px solid rgba(255, 255, 255, 0.1)",
-                background: "rgba(255, 255, 255, 0.05)", color: "#38bdf8", cursor: "pointer",
-                fontSize: "0.75rem", fontWeight: "700"
+                padding: "var(--space-2) var(--space-3)",
+                borderRadius: "var(--radius-md)",
+                border: "1px solid var(--border-default)",
+                background: "var(--bg-tertiary)",
+                color: "var(--text-secondary)",
+                fontSize: "var(--font-size-xs)",
+                fontWeight: "var(--font-weight-medium)"
               }}
             >
-              {playbackSpeed}x SPEED
+              {playbackSpeed}× speed
             </button>
           </div>
 
-          <div style={{ fontSize: "0.8rem", color: "#94a3b8", fontFamily: "monospace" }}>
-            Step <strong style={{ color: "#f8fafc" }}>{activePointIndex + 1}</strong> of {sightings.length}
+          <div style={{
+            fontSize: "var(--font-size-sm)",
+            color: "var(--text-tertiary)",
+            fontFamily: "monospace",
+            fontWeight: "var(--font-weight-medium)"
+          }}>
+            <span style={{ color: "var(--text-primary)" }}>{activePointIndex + 1}</span> / {sightings.length}
           </div>
         </div>
 
@@ -203,49 +266,81 @@ export const TrajectoryPlayer: React.FC<TrajectoryPlayerProps> = ({
             setIsPlaying(false);
             setActivePointIndex(parseInt(e.target.value, 10));
           }}
-          style={{ width: "100%", accentColor: "#38bdf8", cursor: "pointer" }}
+          style={{ width: "100%", accentColor: "var(--color-primary)", cursor: "pointer", height: "4px" }}
         />
       </div>
 
       {/* Checkpoint Detail Card */}
       {currentPoint && (
         <div style={{
-          padding: "12px", borderRadius: "8px",
-          background: currentPoint.is_anomaly ? "rgba(245, 158, 11, 0.1)" : "rgba(56, 189, 248, 0.06)",
-          border: `1px solid ${currentPoint.is_anomaly ? "rgba(245, 158, 11, 0.3)" : "rgba(56, 189, 248, 0.2)"}`
+          padding: "var(--space-4)",
+          borderRadius: "var(--radius-lg)",
+          background: currentPoint.is_anomaly ? "var(--color-warning-soft)" : "var(--color-info-soft)",
+          border: `1px solid ${currentPoint.is_anomaly ? "rgba(245, 158, 11, 0.2)" : "rgba(99, 179, 237, 0.2)"}`
         }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "6px" }}>
-            <div style={{ fontWeight: "700", color: "#f8fafc", fontSize: "0.85rem", display: "flex", alignItems: "center", gap: "6px" }}>
-              <CheckCircle2 size={15} color={currentPoint.is_anomaly ? "#f59e0b" : "#38bdf8"} />
-              {currentPoint.camera_name} ({currentPoint.place_name || "Bangalore"})
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: "var(--space-3)",
+            flexWrap: "wrap",
+            gap: "var(--space-2)"
+          }}>
+            <div style={{
+              fontWeight: "var(--font-weight-semibold)",
+              color: "var(--text-primary)",
+              fontSize: "var(--font-size-base)",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-2)"
+            }}>
+              <CheckCircle2 size={14} color={currentPoint.is_anomaly ? "var(--color-warning)" : "var(--color-info)"} strokeWidth={2} />
+              {currentPoint.camera_name}
+              {currentPoint.place_name && <span style={{ color: "var(--text-tertiary)" }}>• {currentPoint.place_name}</span>}
             </div>
-            <div style={{ fontSize: "0.75rem", color: "#94a3b8", display: "flex", alignItems: "center", gap: "4px" }}>
-              <Clock size={13} /> {new Date(currentPoint.timestamp).toLocaleString()}
-            </div>
+            <time style={{
+              fontSize: "var(--font-size-sm)",
+              color: "var(--text-tertiary)",
+              display: "flex",
+              alignItems: "center",
+              gap: "var(--space-1)"
+            }}>
+              <Clock size={12} strokeWidth={2} /> {new Date(currentPoint.timestamp).toLocaleString()}
+            </time>
           </div>
 
-          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", fontSize: "0.78rem", color: "#94a3b8" }}>
-            <div>Classification: <strong style={{ color: "#38bdf8" }}>{currentPoint.vehicle_color} {currentPoint.vehicle_type} ({currentPoint.make})</strong></div>
-            <div>Confidence: <strong style={{ color: "#34d399" }}>{(currentPoint.confidence * 100).toFixed(1)}%</strong></div>
+          <div style={{
+            display: "flex",
+            gap: "var(--space-4)",
+            flexWrap: "wrap",
+            fontSize: "var(--font-size-sm)",
+            color: "var(--text-secondary)"
+          }}>
+            <div>{currentPoint.vehicle_color} {currentPoint.vehicle_type} • {currentPoint.make}</div>
+            <div>Confidence: {(currentPoint.confidence * 100).toFixed(1)}%</div>
             {currentPoint.distance_from_prev_km !== null && (
-              <div>Dist from prev: <strong style={{ color: "#f8fafc" }}>{currentPoint.distance_from_prev_km} km</strong></div>
+              <div>{currentPoint.distance_from_prev_km} km</div>
             )}
             {currentPoint.time_delta_seconds !== null && (
-              <div>Time delta: <strong style={{ color: "#f8fafc" }}>{currentPoint.time_delta_seconds}s</strong></div>
+              <div>{currentPoint.time_delta_seconds}s</div>
             )}
             {currentPoint.speed_from_prev_kmh !== null && (
-              <div>
-                Computed Speed:{" "}
-                <strong style={{ color: currentPoint.is_anomaly ? "#ef4444" : "#38bdf8" }}>
-                  {currentPoint.speed_from_prev_kmh} km/h
-                </strong>
+              <div style={{ color: currentPoint.is_anomaly ? "var(--color-danger)" : "var(--text-secondary)" }}>
+                {currentPoint.speed_from_prev_kmh} km/h
               </div>
             )}
           </div>
 
           {currentPoint.is_anomaly && currentPoint.anomaly_reason && (
-            <div style={{ marginTop: "6px", fontSize: "0.75rem", color: "#f87171", fontWeight: "600" }}>
-              ⚠️ {currentPoint.anomaly_reason}
+            <div style={{
+              marginTop: "var(--space-3)",
+              paddingTop: "var(--space-3)",
+              borderTop: "1px solid rgba(245, 158, 11, 0.2)",
+              fontSize: "var(--font-size-sm)",
+              color: "var(--color-warning)",
+              fontWeight: "var(--font-weight-medium)"
+            }}>
+              {currentPoint.anomaly_reason}
             </div>
           )}
         </div>

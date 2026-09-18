@@ -182,51 +182,64 @@ export const MapView: React.FC<MapViewProps> = ({
   }, [trajectory?.plate, activePointIndex, sightings.length, currentVehiclePoint]);
 
   return (
-    <div className="glass-panel" style={{ height: "600px", position: "relative", overflow: "hidden", borderRadius: "12px" }}>
-      
+    <div className="glass-panel" style={{ height: "600px", position: "relative", overflow: "hidden" }}>
+
       {/* Map Overlay Controls */}
       <div style={{
-        position: "absolute", top: "16px", right: "16px", zIndex: 1000,
-        display: "flex", gap: "8px", flexWrap: "wrap", justifyContent: "flex-end"
+        position: "absolute", top: "var(--space-4)", right: "var(--space-4)", zIndex: 1000,
+        display: "flex", gap: "var(--space-2)", flexWrap: "wrap", justifyContent: "flex-end"
       }}>
         {/* Map Theme Selector */}
         <div style={{
-          display: "flex", background: "rgba(11, 17, 32, 0.85)", backdropFilter: "blur(8px)",
-          borderRadius: "8px", border: "1px solid rgba(56, 189, 248, 0.3)", padding: "2px",
-          boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+          display: "flex",
+          background: "var(--bg-card)",
+          backdropFilter: "blur(8px)",
+          borderRadius: "var(--radius-lg)",
+          border: "1px solid var(--border-default)",
+          padding: "var(--space-1)",
+          boxShadow: "var(--shadow-md)"
         }}>
           <button
             onClick={() => setMapTheme("dark")}
             style={{
-              padding: "6px 10px", borderRadius: "6px", border: "none",
-              background: mapTheme === "dark" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-              color: mapTheme === "dark" ? "#38bdf8" : "#94a3b8",
-              fontSize: "0.72rem", fontWeight: "600", cursor: "pointer"
+              padding: "var(--space-1) var(--space-3)",
+              borderRadius: "var(--radius-md)",
+              background: mapTheme === "dark" ? "var(--color-primary)" : "transparent",
+              color: mapTheme === "dark" ? "#ffffff" : "var(--text-tertiary)",
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--font-weight-medium)",
+              transition: "var(--transition-base)"
             }}
           >
-            DARK
+            Dark
           </button>
           <button
             onClick={() => setMapTheme("cyber")}
             style={{
-              padding: "6px 10px", borderRadius: "6px", border: "none",
-              background: mapTheme === "cyber" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-              color: mapTheme === "cyber" ? "#38bdf8" : "#94a3b8",
-              fontSize: "0.72rem", fontWeight: "600", cursor: "pointer"
+              padding: "var(--space-1) var(--space-3)",
+              borderRadius: "var(--radius-md)",
+              background: mapTheme === "cyber" ? "var(--color-primary)" : "transparent",
+              color: mapTheme === "cyber" ? "#ffffff" : "var(--text-tertiary)",
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--font-weight-medium)",
+              transition: "var(--transition-base)"
             }}
           >
-            CYBER
+            Cyber
           </button>
           <button
             onClick={() => setMapTheme("satellite")}
             style={{
-              padding: "6px 10px", borderRadius: "6px", border: "none",
-              background: mapTheme === "satellite" ? "rgba(56, 189, 248, 0.25)" : "transparent",
-              color: mapTheme === "satellite" ? "#38bdf8" : "#94a3b8",
-              fontSize: "0.72rem", fontWeight: "600", cursor: "pointer"
+              padding: "var(--space-1) var(--space-3)",
+              borderRadius: "var(--radius-md)",
+              background: mapTheme === "satellite" ? "var(--color-primary)" : "transparent",
+              color: mapTheme === "satellite" ? "#ffffff" : "var(--text-tertiary)",
+              fontSize: "var(--font-size-xs)",
+              fontWeight: "var(--font-weight-medium)",
+              transition: "var(--transition-base)"
             }}
           >
-            SATELLITE
+            Satellite
           </button>
         </div>
 
@@ -234,56 +247,69 @@ export const MapView: React.FC<MapViewProps> = ({
         <button
           onClick={() => setShowZones(!showZones)}
           style={{
-            padding: "8px 12px", borderRadius: "8px",
-            border: `1px solid ${showZones ? "rgba(239, 68, 68, 0.5)" : "rgba(255, 255, 255, 0.1)"}`,
-            background: showZones ? "rgba(239, 68, 68, 0.2)" : "rgba(11, 17, 32, 0.85)",
-            backdropFilter: "blur(8px)", color: showZones ? "#fca5a5" : "#94a3b8",
-            fontSize: "0.78rem", fontWeight: "600", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "6px",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+            padding: "var(--space-2) var(--space-3)",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border-default)",
+            background: showZones ? "var(--color-danger-soft)" : "var(--bg-card)",
+            backdropFilter: "blur(8px)",
+            color: showZones ? "var(--color-danger)" : "var(--text-tertiary)",
+            fontSize: "var(--font-size-xs)",
+            fontWeight: "var(--font-weight-medium)",
+            display: "flex", alignItems: "center", gap: "var(--space-2)",
+            boxShadow: "var(--shadow-md)",
+            transition: "var(--transition-base)"
           }}
         >
-          <ShieldAlert size={14} />
-          {showZones ? "ZONES: ON" : "ZONES: OFF"}
+          <ShieldAlert size={12} strokeWidth={2} />
+          Zones {showZones ? "on" : "off"}
         </button>
 
         {/* Heatmap Toggle */}
         <button
           onClick={() => setShowHeatmap(!showHeatmap)}
           style={{
-            padding: "8px 12px", borderRadius: "8px", border: "1px solid rgba(56, 189, 248, 0.4)",
-            background: showHeatmap ? "rgba(56, 189, 248, 0.3)" : "rgba(11, 17, 32, 0.85)",
-            backdropFilter: "blur(8px)", color: showHeatmap ? "#38bdf8" : "#94a3b8",
-            fontSize: "0.78rem", fontWeight: "600", cursor: "pointer",
-            display: "flex", alignItems: "center", gap: "6px",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+            padding: "var(--space-2) var(--space-3)",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border-default)",
+            background: showHeatmap ? "var(--color-primary-soft)" : "var(--bg-card)",
+            backdropFilter: "blur(8px)",
+            color: showHeatmap ? "var(--color-primary)" : "var(--text-tertiary)",
+            fontSize: "var(--font-size-xs)",
+            fontWeight: "var(--font-weight-medium)",
+            display: "flex", alignItems: "center", gap: "var(--space-2)",
+            boxShadow: "var(--shadow-md)",
+            transition: "var(--transition-base)"
           }}
         >
-          <Layers size={14} />
-          {showHeatmap ? "HEATMAP: ON" : "HEATMAP: OFF"}
+          <Layers size={12} strokeWidth={2} />
+          Heatmap {showHeatmap ? "on" : "off"}
         </button>
       </div>
 
       {/* Map Legend on Top Left */}
       <div style={{
-        position: "absolute", top: "16px", left: "16px", zIndex: 1000,
-        background: "rgba(11, 17, 32, 0.85)", backdropFilter: "blur(8px)",
-        borderRadius: "8px", border: "1px solid rgba(255, 255, 255, 0.1)",
-        padding: "6px 10px", fontSize: "0.7rem", color: "#cbd5e1",
-        display: "flex", gap: "10px", alignItems: "center",
-        boxShadow: "0 4px 15px rgba(0,0,0,0.5)"
+        position: "absolute", top: "var(--space-4)", left: "var(--space-4)", zIndex: 1000,
+        background: "var(--bg-card)", backdropFilter: "blur(8px)",
+        borderRadius: "var(--radius-lg)", border: "1px solid var(--border-default)",
+        padding: "var(--space-2) var(--space-3)",
+        fontSize: "var(--font-size-xs)",
+        color: "var(--text-secondary)",
+        display: "flex", gap: "var(--space-3)", alignItems: "center",
+        boxShadow: "var(--shadow-md)",
+        fontWeight: "var(--font-weight-medium)"
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <Navigation2 size={12} color="#38bdf8" />
-          <span>Road Routing: <strong>{trajectory?.route_coordinates?.length ? "OSM Street Snapped" : "Active"}</strong></span>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <Navigation2 size={12} color="var(--text-tertiary)" strokeWidth={2} />
+          <span>{trajectory?.route_coordinates?.length ? "OSM routed" : "Direct path"}</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#ef4444" }}></span>
-          <span>Restricted Zone</span>
+        <div style={{ width: "1px", height: "12px", background: "var(--border-default)" }}></div>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-danger)" }}></span>
+          <span>Restricted</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <span style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#f59e0b" }}></span>
-          <span>No Parking</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "var(--color-warning)" }}></span>
+          <span>No parking</span>
         </div>
       </div>
 
