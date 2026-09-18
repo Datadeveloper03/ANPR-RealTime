@@ -148,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <AlertTriangle size={14} strokeWidth={2} />
             Blacklist
-            {stats?.blacklisted_vehicles > 0 && (
+            {(stats?.blacklisted_vehicles ?? 0) > 0 && (
               <span
                 style={{
                   padding: "2px 6px",
@@ -159,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   fontWeight: 600,
                 }}
               >
-                {stats.blacklisted_vehicles}
+                {stats?.blacklisted_vehicles}
               </span>
             )}
           </button>

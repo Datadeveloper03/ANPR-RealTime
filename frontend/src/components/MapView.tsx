@@ -305,7 +305,7 @@ export const MapView: React.FC<MapViewProps> = ({
         fontWeight: 500,
       }}>
         {/* Route type indicator */}
-        {trajectory?.route_coordinates?.length > 0 && (
+        {(trajectory?.route_coordinates?.length ?? 0) > 0 && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
               <Navigation2 size={12} color="var(--accent)" strokeWidth={2} />

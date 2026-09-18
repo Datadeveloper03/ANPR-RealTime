@@ -8,12 +8,12 @@ function getDefaultWsUrl(): string {
   }
   if (typeof window !== "undefined") {
     if (window.location.port === "5173") {
-      return "ws://localhost:8000/alerts";
+      return "ws://localhost:8001/alerts";
     }
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     return `${proto}//${window.location.host}/alerts`;
   }
-  return "ws://localhost:8000/alerts";
+  return "ws://localhost:8001/alerts";
 }
 
 class WebSocketService {
