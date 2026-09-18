@@ -115,7 +115,7 @@ export function App() {
 
   // WebSocket Subscription
   useEffect(() => {
-    wsService.connect("ws://localhost:8000/alerts");
+    wsService.connect();
     const interval = setInterval(() => {
       setWsConnected(wsService.getStatus());
     }, 1000);

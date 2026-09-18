@@ -2,6 +2,20 @@ import type { AlertMessage } from "../types";
 
 type AlertCallback = (alert: AlertMessage) => void;
 
+function getDefaultWsUrl(): string {
+  if (import.meta.env.VITE_WS_URL) {
+    return import.meta.env.VITE_WS_URL;
+  }
+  if (typeof window !== "undefined") {
+    if (window.location.port === "5173") {
+      return "ws://localhost:8000/alerts";
+    }
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    return `${proto}//${window.location.host}/alerts`;
+  }
+  return "ws://localhost:8000/alerts";
+}
+
 class WebSocketService {
   private socket: WebSocket | null = null;
   private listeners: Set<AlertCallback> = new Set();
@@ -9,13 +23,14 @@ class WebSocketService {
   private shouldReconnect = true;
   private isConnected = false;
 
-  public connect(url = "ws://localhost:8000/alerts") {
+  public connect(url?: string) {
+    const targetUrl = url || getDefaultWsUrl();
     if (this.socket && (this.socket.readyState === WebSocket.OPEN || this.socket.readyState === WebSocket.CONNECTING)) {
       return;
     }
 
     try {
-      this.socket = new WebSocket(url);
+      this.socket = new WebSocket(targetUrl);
 
       this.socket.onopen = () => {
         this.isConnected = true;
@@ -35,7 +50,7 @@ class WebSocketService {
         this.isConnected = false;
         console.warn("🔴 WebSocket disconnected. Reconnecting in", this.reconnectInterval / 1000, "s...");
         if (this.shouldReconnect) {
-          setTimeout(() => this.connect(url), this.reconnectInterval);
+          setTimeout(() => this.connect(targetUrl), this.reconnectInterval);
         }
       };
 
@@ -45,7 +60,7 @@ class WebSocketService {
     } catch (err) {
       console.error("Failed to establish WebSocket connection:", err);
       if (this.shouldReconnect) {
-        setTimeout(() => this.connect(url), this.reconnectInterval);
+        setTimeout(() => this.connect(targetUrl), this.reconnectInterval);
       }
     }
   }

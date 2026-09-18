@@ -2,6 +2,7 @@ import os
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from app.config import settings
@@ -63,8 +64,15 @@ if os.path.exists(demo_videos_dir):
     app.mount("/videos", StaticFiles(directory=demo_videos_dir), name="videos")
     logger.info(f"Mounted static demo videos from: {demo_videos_dir}")
 
-@app.get("/")
-def root():
+# Mount Built Frontend if available
+frontend_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend", "dist"))
+frontend_assets = os.path.join(frontend_dist, "assets")
+if os.path.exists(frontend_assets):
+    app.mount("/assets", StaticFiles(directory=frontend_assets), name="assets")
+    logger.info(f"Mounted frontend assets from: {frontend_assets}")
+
+@app.get("/api/info")
+def api_info():
     return {
         "system": settings.PROJECT_NAME,
         "version": settings.VERSION,
@@ -76,3 +84,21 @@ def root():
 @app.get("/health")
 def health():
     return {"status": "healthy"}
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    # If the file exists directly in frontend_dist (e.g. vite.svg, favicon.ico), serve it
+    file_path = os.path.join(frontend_dist, full_path)
+    if full_path and os.path.isfile(file_path):
+        return FileResponse(file_path)
+    # Otherwise return index.html for client-side SPA routing
+    index_path = os.path.join(frontend_dist, "index.html")
+    if os.path.exists(index_path):
+        return FileResponse(index_path)
+    return {
+        "system": settings.PROJECT_NAME,
+        "version": settings.VERSION,
+        "status": "online",
+        "docs_url": "/docs",
+        "ws_alerts_url": "/alerts"
+    }

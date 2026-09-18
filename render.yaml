@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: anpr-vehicle-tracking
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT --app-dir backend"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: DATABASE_URL
+        value: sqlite:///./anpr_local.db
