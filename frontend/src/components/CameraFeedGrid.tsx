@@ -358,92 +358,85 @@ export const CameraFeedGrid: React.FC<CameraFeedGridProps> = ({
       : placeInventories.filter((p) => p.place_name === selectedPlaceFilter);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-5)" }}>
       {/* Header & Sector Filter Bar */}
-      <div className="glass-panel" style={{ padding: "18px 20px" }}>
+      <div className="glass-panel" style={{ padding: "var(--space-5)" }}>
         <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
             flexWrap: "wrap",
-            gap: "12px",
-            marginBottom: "14px",
+            gap: "var(--space-4)",
+            marginBottom: "var(--space-4)",
           }}
         >
           <div>
             <h2
               style={{
-                fontSize: "1.2rem",
-                fontWeight: "700",
+                fontSize: "var(--font-size-2xl)",
+                fontWeight: "var(--font-weight-semibold)",
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
-                color: "#f8fafc",
+                gap: "var(--space-3)",
+                color: "var(--text-primary)",
               }}
             >
-              <Video size={24} color="#38bdf8" /> City CCTV Camera Feeds & Video Streams
+              <Video size={20} color="var(--text-tertiary)" strokeWidth={2} /> CCTV Network
             </h2>
             <p
               style={{
-                fontSize: "0.8rem",
-                color: "#94a3b8",
-                marginTop: "4px",
+                fontSize: "var(--font-size-sm)",
+                color: "var(--text-tertiary)",
+                marginTop: "var(--space-1)",
               }}
             >
-              Real-time multi-lane optical feeds with YOLOv8 vehicle detection, HSRP recognition, and sector audit logs
+              Real-time vehicle detection and sector monitoring
             </p>
           </div>
 
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)", flexWrap: "wrap" }}>
             {/* Launch 8-Cam Matrix Grid View */}
             <button
               onClick={() => setIsMatrixViewOpen(true)}
               style={{
-                padding: "8px 16px",
-                borderRadius: "8px",
-                border: "1px solid rgba(168, 85, 247, 0.4)",
-                background:
-                  "linear-gradient(135deg, rgba(147, 51, 234, 0.3) 0%, rgba(126, 34, 206, 0.3) 100%)",
-                color: "#c084fc",
-                cursor: "pointer",
-                fontSize: "0.82rem",
-                fontWeight: "700",
+                padding: "var(--space-2) var(--space-4)",
+                borderRadius: "var(--radius-lg)",
+                border: "1px solid var(--border-default)",
+                background: "var(--bg-secondary)",
+                color: "var(--text-secondary)",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--font-weight-medium)",
                 display: "flex",
                 alignItems: "center",
-                gap: "6px",
-                boxShadow: "0 2px 14px rgba(168, 85, 247, 0.2)",
+                gap: "var(--space-2)",
+                transition: "var(--transition-base)"
               }}
             >
-              <Layers size={15} /> Multi-Cam 8x Matrix View
+              <Layers size={14} strokeWidth={2} /> Matrix view
             </button>
 
-            {/* Export All CSV Button */}
+            {/* Export CSV Button */}
             <button
               onClick={() => handleExportCsv(selectedPlaceFilter)}
               disabled={isExporting}
               style={{
-                padding: "8px 16px",
-                borderRadius: "8px",
-                border: "1px solid rgba(56, 189, 248, 0.4)",
-                background:
-                  "linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(3, 105, 161, 0.25) 100%)",
-                color: "#38bdf8",
-                cursor: isExporting ? "wait" : "pointer",
-                fontSize: "0.82rem",
-                fontWeight: "600",
+                padding: "var(--space-2) var(--space-4)",
+                borderRadius: "var(--radius-lg)",
+                border: "1px solid var(--border-default)",
+                background: "var(--bg-secondary)",
+                color: "var(--text-secondary)",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--font-weight-medium)",
                 display: "flex",
                 alignItems: "center",
-                gap: "6px",
-                boxShadow: "0 2px 12px rgba(56, 189, 248, 0.15)",
+                gap: "var(--space-2)",
+                opacity: isExporting ? 0.6 : 1,
+                transition: "var(--transition-base)"
               }}
             >
-              <Download size={15} />
-              {isExporting
-                ? "Exporting CSV..."
-                : selectedPlaceFilter === "ALL"
-                ? "Export All Evaluated CSV"
-                : `Export ${selectedPlaceFilter} CSV`}
+              <Download size={14} strokeWidth={2} />
+              {isExporting ? "Exporting..." : "Export CSV"}
             </button>
 
             <button
@@ -453,82 +446,77 @@ export const CameraFeedGrid: React.FC<CameraFeedGridProps> = ({
               }}
               disabled={isLoading}
               style={{
-                padding: "8px 16px",
-                borderRadius: "8px",
-                border: "1px solid rgba(255,255,255,0.12)",
-                background: "rgba(255,255,255,0.06)",
-                color: "#f8fafc",
-                cursor: "pointer",
-                fontSize: "0.82rem",
+                padding: "var(--space-2) var(--space-4)",
+                borderRadius: "var(--radius-lg)",
+                border: "1px solid var(--border-default)",
+                background: "var(--color-primary)",
+                color: "#ffffff",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--font-weight-medium)",
                 display: "flex",
                 alignItems: "center",
-                gap: "6px",
-                boxShadow: "0 2px 10px rgba(0,0,0,0.3)",
+                gap: "var(--space-2)",
+                opacity: isLoading ? 0.6 : 1,
+                transition: "var(--transition-base)"
               }}
             >
-              <RefreshCw size={14} className={isLoading ? "radar-pulse" : ""} /> Refresh Feeds
+              <RefreshCw size={14} strokeWidth={2} /> Refresh
             </button>
           </div>
         </div>
 
         {/* Sector Filter Buttons */}
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "var(--space-1)", flexWrap: "wrap", alignItems: "center" }}>
           <span
             style={{
-              fontSize: "0.75rem",
-              color: "#94a3b8",
-              fontWeight: "600",
-              marginRight: "4px",
+              fontSize: "var(--font-size-xs)",
+              color: "var(--text-muted)",
+              fontWeight: "var(--font-weight-medium)",
+              marginRight: "var(--space-2)",
+              textTransform: "uppercase",
+              letterSpacing: "0.05em"
             }}
           >
-            FILTER SECTOR:
+            Filter sector
           </span>
           <button
             onClick={() => setSelectedPlaceFilter("ALL")}
             style={{
-              padding: "6px 14px",
-              borderRadius: "6px",
-              border: "none",
-              fontSize: "0.78rem",
-              fontWeight: "700",
-              cursor: "pointer",
+              padding: "var(--space-2) var(--space-3)",
+              borderRadius: "var(--radius-md)",
+              border: "1px solid var(--border-default)",
+              fontSize: "var(--font-size-sm)",
+              fontWeight: "var(--font-weight-medium)",
               background:
                 selectedPlaceFilter === "ALL"
-                  ? "rgba(56, 189, 248, 0.25)"
-                  : "rgba(10, 13, 20, 0.7)",
-              color: selectedPlaceFilter === "ALL" ? "#38bdf8" : "#94a3b8",
-              borderBottom:
-                selectedPlaceFilter === "ALL"
-                  ? "2px solid #38bdf8"
-                  : "2px solid transparent",
+                  ? "var(--color-primary)"
+                  : "var(--bg-secondary)",
+              color: selectedPlaceFilter === "ALL" ? "#ffffff" : "var(--text-tertiary)",
+              transition: "var(--transition-base)"
             }}
           >
-            All Sectors ({placeInventories.length})
+            All ({placeInventories.length})
           </button>
           {placeInventories.map((place) => (
             <button
               key={place.place_name}
               onClick={() => setSelectedPlaceFilter(place.place_name)}
               style={{
-                padding: "6px 14px",
-                borderRadius: "6px",
-                border: "none",
-                fontSize: "0.78rem",
-                fontWeight: "700",
-                cursor: "pointer",
+                padding: "var(--space-2) var(--space-3)",
+                borderRadius: "var(--radius-md)",
+                border: "1px solid var(--border-default)",
+                fontSize: "var(--font-size-sm)",
+                fontWeight: "var(--font-weight-medium)",
                 background:
                   selectedPlaceFilter === place.place_name
-                    ? "rgba(56, 189, 248, 0.25)"
-                    : "rgba(10, 13, 20, 0.7)",
+                    ? "var(--color-primary)"
+                    : "var(--bg-secondary)",
                 color:
-                  selectedPlaceFilter === place.place_name ? "#38bdf8" : "#94a3b8",
-                borderBottom:
-                  selectedPlaceFilter === place.place_name
-                    ? "2px solid #38bdf8"
-                    : "2px solid transparent",
+                  selectedPlaceFilter === place.place_name ? "#ffffff" : "var(--text-tertiary)",
+                transition: "var(--transition-base)"
               }}
             >
-              {place.place_name} ({place.camera_count} Cams)
+              {place.place_name} ({place.camera_count})
             </button>
           ))}
         </div>
@@ -537,152 +525,120 @@ export const CameraFeedGrid: React.FC<CameraFeedGridProps> = ({
       {/* Place Sectors Grid */}
       <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         {filteredPlaces.map((place) => {
-          const isRestricted = place.zone_type === "RESTRICTED_GEOFENCE";
-          const isNoParking = place.zone_type === "NO_PARKING";
-          const isIntersection = place.zone_type === "INTERSECTION";
+          const getZoneBadge = (zoneType: string) => {
+            switch (zoneType) {
+              case "RESTRICTED_GEOFENCE":
+                return { label: "Restricted zone", severity: "danger" };
+              case "NO_PARKING":
+                return { label: "No parking zone", severity: "warning" };
+              case "INTERSECTION":
+                return { label: "Intersection", severity: "info" };
+              default:
+                return { label: "Standard", severity: "info" };
+            }
+          };
 
-          let zoneBadgeBg = "rgba(56, 189, 248, 0.15)";
-          let zoneBadgeBorder = "rgba(56, 189, 248, 0.3)";
-          let zoneBadgeColor = "#38bdf8";
-          let zoneLabel = "STANDARD CORRIDOR";
-
-          if (isRestricted) {
-            zoneBadgeBg = "rgba(239, 68, 68, 0.2)";
-            zoneBadgeBorder = "rgba(239, 68, 68, 0.4)";
-            zoneBadgeColor = "#f87171";
-            zoneLabel = "RESTRICTED GEOFENCE ZONE";
-          } else if (isNoParking) {
-            zoneBadgeBg = "rgba(245, 158, 11, 0.2)";
-            zoneBadgeBorder = "rgba(245, 158, 11, 0.4)";
-            zoneBadgeColor = "#fbbf24";
-            zoneLabel = "STRICT NO-PARKING ZONE";
-          } else if (isIntersection) {
-            zoneBadgeBg = "rgba(168, 85, 247, 0.2)";
-            zoneBadgeBorder = "rgba(168, 85, 247, 0.4)";
-            zoneBadgeColor = "#c084fc";
-            zoneLabel = "CONTROLLED INTERSECTION";
-          }
+          const zoneBadge = getZoneBadge(place.zone_type);
 
           return (
             <div
               key={place.place_name}
               className="glass-panel"
               style={{
-                borderRadius: "14px",
+                borderRadius: "var(--radius-xl)",
                 overflow: "hidden",
-                border: "1px solid var(--border-color)",
-                boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
               }}
             >
               {/* Place Inventory Header */}
               <div
                 style={{
-                  padding: "16px 20px",
-                  background:
-                    "linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.8) 100%)",
-                  borderBottom: "1px solid var(--border-color)",
+                  padding: "var(--space-5)",
+                  background: "var(--bg-secondary)",
+                  borderBottom: "1px solid var(--border-default)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
                   flexWrap: "wrap",
-                  gap: "12px",
+                  gap: "var(--space-4)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-3)" }}>
                   <div
                     style={{
-                      width: "38px",
-                      height: "38px",
-                      borderRadius: "8px",
-                      background: "rgba(56, 189, 248, 0.15)",
-                      border: "1px solid rgba(56, 189, 248, 0.3)",
+                      width: "36px",
+                      height: "36px",
+                      borderRadius: "var(--radius-lg)",
+                      background: "var(--color-primary-soft)",
+                      border: "1px solid rgba(59, 130, 246, 0.2)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
-                    <MapPin size={20} color="#38bdf8" />
+                    <MapPin size={18} color="var(--color-primary)" strokeWidth={2} />
                   </div>
                   <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
                       <h3
                         style={{
-                          fontSize: "1.1rem",
-                          fontWeight: "800",
-                          letterSpacing: "0.5px",
-                          color: "#f8fafc",
+                          fontSize: "var(--font-size-xl)",
+                          fontWeight: "var(--font-weight-semibold)",
+                          color: "var(--text-primary)",
                         }}
                       >
-                        {place.place_name.toUpperCase()} SECTOR INVENTORY
+                        {place.place_name}
                       </h3>
                       <span
-                        style={{
-                          fontSize: "0.68rem",
-                          padding: "3px 8px",
-                          borderRadius: "4px",
-                          background: zoneBadgeBg,
-                          border: `1px solid ${zoneBadgeBorder}`,
-                          color: zoneBadgeColor,
-                          fontWeight: "700",
-                        }}
+                        className={`badge-${zoneBadge.severity}`}
                       >
-                        {zoneLabel}
+                        {zoneBadge.label}
                       </span>
                     </div>
                     <div
                       style={{
-                        fontSize: "0.75rem",
-                        color: "#94a3b8",
-                        marginTop: "2px",
+                        fontSize: "var(--font-size-sm)",
+                        color: "var(--text-tertiary)",
+                        marginTop: "var(--space-1)",
                       }}
                     >
-                      Sensor Nodes: <strong>{place.camera_count} Active CCTVs</strong> | Total Today:{" "}
-                      <strong style={{ color: "#34d399" }}>
-                        {place.total_sightings_today} Sightings
-                      </strong>
+                      {place.camera_count} cameras • {place.total_sightings_today} sightings today
                     </div>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "var(--space-2)" }}>
                   {place.anomaly_count > 0 && (
                     <div
+                      className="badge-danger"
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "6px",
-                        padding: "5px 12px",
-                        borderRadius: "6px",
-                        background: "rgba(239, 68, 68, 0.2)",
-                        border: "1px solid rgba(239, 68, 68, 0.4)",
-                        color: "#f87171",
-                        fontSize: "0.75rem",
-                        fontWeight: "700",
+                        gap: "var(--space-2)",
                       }}
                     >
-                      <AlertTriangle size={14} />
-                      {place.anomaly_count} Anomalies Detected
+                      <AlertTriangle size={12} strokeWidth={2} />
+                      {place.anomaly_count} anomalies
                     </div>
                   )}
 
                   <button
                     onClick={() => handleExportCsv(place.place_name)}
                     style={{
-                      padding: "6px 12px",
-                      borderRadius: "6px",
-                      background: "rgba(56, 189, 248, 0.12)",
-                      border: "1px solid rgba(56, 189, 248, 0.3)",
-                      color: "#38bdf8",
-                      cursor: "pointer",
-                      fontSize: "0.75rem",
-                      fontWeight: "600",
+                      padding: "var(--space-2) var(--space-3)",
+                      borderRadius: "var(--radius-md)",
+                      background: "var(--bg-tertiary)",
+                      border: "1px solid var(--border-default)",
+                      color: "var(--text-secondary)",
+                      fontSize: "var(--font-size-sm)",
+                      fontWeight: "var(--font-weight-medium)",
                       display: "flex",
                       alignItems: "center",
-                      gap: "4px",
+                      gap: "var(--space-2)",
+                      transition: "var(--transition-base)"
                     }}
-                    title={`Export evaluated CCTV sightings for ${place.place_name} to CSV`}
+                    title={`Export sightings for ${place.place_name}`}
                   >
-                    <Download size={13} /> Export CSV
+                    <Download size={12} strokeWidth={2} /> Export
                   </button>
                 </div>
               </div>
