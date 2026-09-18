@@ -2,10 +2,13 @@
 # Exit on error
 set -o errexit
 
-echo "📦 Installing Node dependencies and building React frontend..."
+echo "📦 Building React frontend..."
 cd frontend
-npm ci || npm install
-npm run build
+if npm ci || npm install; then
+  npm run build || echo "⚠️ npm run build failed, falling back to committed dist/ assets"
+else
+  echo "⚠️ npm install failed, falling back to committed dist/ assets"
+fi
 cd ..
 
 echo "🐍 Installing Python dependencies..."

@@ -14,8 +14,8 @@ node_modules/
 frontend/node_modules/
 
 # Build artifacts
-frontend/dist/
 dist/
+!frontend/dist/
 build/
 *.egg-info/
 
